@@ -166,7 +166,7 @@ def figure_6_energy_positions(state_adj_matrices, state_block_names, states):
     """
     fig, axes = plt.subplots(
         2, 2, figsize=(20, 20),
-        gridspec_kw={'w_space': 0.05, 'h_space': 0.1},
+        gridspec_kw={'wspace': 0.1, 'hspace': 0.1},
     )
 
     for adj_matrix, block_names, state, ax in zip(
