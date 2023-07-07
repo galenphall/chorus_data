@@ -270,10 +270,10 @@ def main():
     block_names_list = []
 
     for region, record_type, level in [
-        ('CO', 'lobbying', 0),
+        ('CO', 'lobbying', 1),
         ('TX', 'testimony', 0),
         ('IL', 'testimony', 1),
-        ('MA', 'lobbying', 0)]:
+        ('MA', 'lobbying', 1)]:
 
         label_column = f'block_level_{level}'
         region_blockstate = blockstates[region, record_type]
