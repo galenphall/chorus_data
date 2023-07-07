@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-from plot_utils import plot_bipartite, cluster_agreement_plot
+from utils import plot_bipartite, cluster_agreement_plot
 
 
 def figure_1_records_per_year(records_per_year):
