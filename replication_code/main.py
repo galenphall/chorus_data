@@ -62,21 +62,21 @@ def main():
     ### Tables ###
 
     """Table 1: Summary statistics"""
-    n_positions = positions.groupby(['blockstate', 'record_type']).position_numeric.value_counts().unstack()
+    n_positions = positions.groupby(['state', 'record_type']).position_numeric.value_counts().unstack()
     percent_neutral = (n_positions.apply(lambda p: p[0] / sum(p), 1) * 100).round(1)
-    avg_per_bill = positions.groupby(['blockstate', 'record_type']).apply(
+    avg_per_bill = positions.groupby(['state', 'record_type']).apply(
         lambda p: len(p) / p.unified_bill_id.nunique()).round(1)
-    years_covered = positions.groupby(['blockstate', 'record_type']).year.apply(lambda y: f"{min(y)}-{max(y)}")
+    years_covered = positions.groupby(['state', 'record_type']).year.apply(lambda y: f"{min(y)}-{max(y)}")
 
     chamber_map = {
         'S': 'Senate',
         'H': 'House',
-        'bipartite_adj_matrix': 'Assembly',
+        'A': 'Assembly',
         'L': 'Unicameral'
     }
 
     positions['chamber'] = positions.unified_prefix.str[0].map(chamber_map)
-    chambers_covered = positions.groupby(['blockstate', 'record_type']).chamber.apply(
+    chambers_covered = positions.groupby(['state', 'record_type']).chamber.apply(
         lambda chambers: sorted({c for c in chambers.unique() if sum(chambers == c) > 100})).map(', '.join)
 
     table_1 = pd.concat([n_positions, percent_neutral, avg_per_bill, years_covered, chambers_covered], axis=1)
@@ -128,11 +128,6 @@ def main():
     n_bills = wi_bills[f'block_level_{level}'].value_counts()
     pct_passed = wi_bills.groupby(f'block_level_{level}').apply(
         lambda b: (b.status.isin([4, 5]).sum() / b.status.notna().sum()))
-    ncsl_categories = wi_bills[wi_bills.ncsl_topics.notna()].groupby(f'block_level_{level}').ncsl_topics.apply(
-        lambda n: ', '.join(
-            pd.Series([topic.split('__')[-1] for topics in n for topic in topics.split(', ')]).value_counts().nlargest(
-                5).index.values).replace('_', ' ')
-    )
 
     table_3 = pd.concat([n_bills, pct_passed, top_words], 1)
     table_3.columns = ['N', '% passed', 'top descriptors']
