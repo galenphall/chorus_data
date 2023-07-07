@@ -1,5 +1,4 @@
 import os
-
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -9,7 +8,6 @@ from sklearn.naive_bayes import MultinomialNB
 import load
 from figures import figure_5_nmi_a, figure_1_records_per_year, figure_2_histogram, figure_5_nmi_b, \
     figure_4_blockmodel_projection, figure_6_energy_positions, figure_3_blockmodel
-### Load data ###
 from hbsbm import get_bipartite_adjacency_matrix
 
 
