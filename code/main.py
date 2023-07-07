@@ -9,7 +9,6 @@ from sklearn.naive_bayes import MultinomialNB
 import load
 from figures import figure_5_nmi_a, figure_1_records_per_year, figure_2_histogram, figure_5_nmi_b, \
     figure_4_blockmodel_projection, figure_6_energy_positions, figure_3_blockmodel
-
 ### Load data ###
 from hbsbm import get_bipartite_adjacency_matrix
 
@@ -141,6 +140,7 @@ def entropy(x):
     x = x[x > 0]
     x = x / x.sum()
     return -sum(x * np.log(x))
+
 
 bill_client_cts = wi_matrix.groupby(client_block_level_0).sum()
 bill_client_cts = bill_client_cts.loc[:, bill_client_cts.sum(0) > 0]
@@ -285,7 +285,8 @@ for region, record_type, level in [
     if not os.path.exists(f'tables/{region.upper()}_network_figure_clusters_named.xlsx'):
 
         n_clients = abs(adj_matrix).groupby(block_names).apply(len)
-        block_names = {k: v for k, v in block_names.items() if (k in adj_matrix.index) and (v in n_clients) and (n_clients[v] > 3)}
+        block_names = {k: v for k, v in block_names.items() if
+                       (k in adj_matrix.index) and (v in n_clients) and (n_clients[v] > 3)}
         adj_matrix = adj_matrix.reindex(block_names)
         region_clients[region_clients.client_uuid.isin(block_names)][
             ['client_name', 'client_uuid', label_column]

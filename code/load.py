@@ -2,14 +2,18 @@ import pickle
 
 import pandas as pd
 
+
 def positions():
     return pd.read_parquet('data/positions.parquet')
+
 
 def bills():
     return pd.read_parquet('data/bills.parquet')
 
+
 def clients():
     return pd.read_parquet('data/clients.parquet')
+
 
 def blockstates():
     return {

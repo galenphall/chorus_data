@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+
 from utils import plot_bipartite, cluster_agreement_plot
 
 
@@ -169,13 +170,10 @@ def figure_6_energy_positions(state_adj_matrices, state_block_names, states):
     )
 
     for adj_matrix, block_names, state, ax in zip(
-        state_adj_matrices, state_block_names, states, axes.flatten()
+            state_adj_matrices, state_block_names, states, axes.flatten()
     ):
         cluster_agreement_plot(adj_matrix, block_names, relation='both', ax=ax)
         ax.set_title(state, fontsize=20, fontweight='bold')
         ax.spines['top'].set_visible(True)
 
     return fig
-
-
-

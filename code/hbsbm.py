@@ -1,12 +1,11 @@
 import datetime
 import json
 import pickle
+from collections import defaultdict
 
 import graph_tool.all as gt
 import networkx as nx
 import numpy as np
-from collections import defaultdict
-
 import pandas as pd
 import tqdm
 
@@ -26,9 +25,9 @@ def get_bipartite_graph(bipartite_adj_matrix: pd.DataFrame):
 
     g = gt.Graph(directed=False)
 
-    ## define node properties
-    ## name: clients - client_uuid, bills - unified_bill_id
-    ## kind: clients - 0, bills - 1
+    # define node properties
+    # name: clients - client_uuid, bills - unified_bill_id
+    # kind: clients - 0, bills - 1
     name = g.vp["name"] = g.new_vp("string")
     kind = g.vp["kind"] = g.new_vp("int")
     etype = g.ep["weight"] = g.new_ep("int")
@@ -40,26 +39,26 @@ def get_bipartite_graph(bipartite_adj_matrix: pd.DataFrame):
     bls = E_combo.target.unique()
 
     I = len(igs)
-    ## add all interest groups first
+    # add all interest groups first
     for i in range(I):
         ig = igs[i]
         d = clients_add[ig]
         name[d] = ig
         kind[d] = 0
 
-    ## add all bills
+    # add all bills
     for i in range(len(bls)):
         bill = bls[i]
         b = bills_add[bill]
         name[b] = bill
         kind[b] = 1
 
-    ## add all edges and assign their type = to the numeric position
+    # add all edges and assign their type = to the numeric position
     for i in tqdm.tqdm(range(len(E_combo))):
         i_client = np.where(igs == E_combo.iloc[i]['source'])[0][0]
-    i_bill = np.where(bls == E_combo.iloc[i]['target'])[0][0]
-    e = g.add_edge(i_client, I + i_bill)
-    etype[e] = E_combo.iloc[i]['weight']
+        i_bill = np.where(bls == E_combo.iloc[i]['target'])[0][0]
+        e = g.add_edge(i_client, I + i_bill)
+        etype[e] = E_combo.iloc[i]['weight']
 
     return g
 
@@ -245,8 +244,18 @@ def get_partition_mode_state(blockstate):
     return pmode
 
 
-def run_blockmodel_from_scratch(positions, state, record_type, deg_corr, layers, overlap = False):
-
+def run_blockmodel_from_scratch(positions: pd.DataFrame, state: str, record_type: str, deg_corr: bool, layers: bool,
+                                overlap: bool = False):
+    """
+    Run a blockmodel from scratch and save it to disk with metadata and partition mode.
+    :param positions: subset of the positions dataframe
+    :param state: the US state
+    :param record_type: 'lobbying' or 'testimony'
+    :param deg_corr: whether to use degree correction
+    :param layers: whether to use layers or categorical labels
+    :param overlap: whether to allow overlappping blocks
+    :return:
+    """
     selected_positions = positions[(positions.state == state) & (positions.record_type == record_type)]
     adj_matrix = get_bipartite_adjacency_matrix(selected_positions, k_core=(5, 5))
     graph = get_bipartite_graph(adj_matrix)
@@ -256,10 +265,19 @@ def run_blockmodel_from_scratch(positions, state, record_type, deg_corr, layers,
 
     save_blockmodel_and_metadata(blockstate, state, record_type, deg_corr, layers, overlap, pmode=pmode)
 
+
 def run_all_blockmodels_from_scratch(positions: pd.DataFrame,
                                      deg_corr: bool = True,
                                      layers: bool = False,
                                      overlap: bool = False):
+    """
+    Run all blockmodels from scratch and save them to disk with metadata and partition mode.
+    :param positions: the positions dataframe
+    :param deg_corr: see run_blockmodel_from_scratch
+    :param layers: see run_blockmodel_from_scratch
+    :param overlap: see run_blockmodel_from_scratch
+    :return:
+    """
     for state, record_type in positions[['state', 'record_type']].value_counts().index.values[::-1]:
         print(f"Running {state} {record_type}")
         run_blockmodel_from_scratch(positions, state, record_type, deg_corr, layers, overlap)

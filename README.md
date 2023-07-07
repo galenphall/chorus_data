@@ -32,7 +32,22 @@ Files:
 The figures presented in the paper are available in the `figures` folder. The code used to generate them is available in the `code/figures.py` file. Note that the figures in the paper have been edited for clarity and aesthetics.
 
 ## Requirements
-The code was written in Python 3.10 The required packages are listed in `requirements.txt`. To install them, run the following command in the terminal:
+The code was written in Python 3.10 Most required packages are listed in `requirements.txt`. To install them, run the following command in the terminal:
 ```bash
 pip install -r requirements.txt.
 ```
+The hbsbm code also requires the `graph-tool` package, which can be installed via Conda but is not available on PyPI. To install it, follow the instructions [on the graph-tool website](https://git.skewed.de/count0/graph-tool/-/wikis/installation-instructions).
+
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Contact
+For questions or comments, please contact Galen Hall at
+<galen.p.hall [at] gmail.com>.
+
+## Acknowledgments
+This project was supported with funding from the Climate Social Science Network (CSSN); see https://cssn.org for more information. We thank the CSSN for their support.
+
+The blockmodeling code is based on the [hbsbm](http://git.skewed.de/count0/hbsbm) package by Tiago Peixoto.
+
+The authors are responsible for all errors.
