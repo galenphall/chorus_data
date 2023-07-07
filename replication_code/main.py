@@ -271,7 +271,7 @@ def main():
         ('MA', 'lobbying', 0)]:
 
         label_column = f'block_level_{level}'
-        region_blockstate = blockstates[f'{region}_{record_type}']
+        region_blockstate = blockstates[region, record_type]
         region_positions = positions[positions.state == region.upper()].copy()
         region_clients = clients[clients.state == region.upper()].copy()
         region_bills = bills[bills.state == region.upper()].copy()
