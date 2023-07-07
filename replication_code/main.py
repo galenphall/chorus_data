@@ -1,5 +1,6 @@
 # This is run from the outer directory, not the replication_code directory, so we need to add the replication_code directory to the path.
 import sys
+
 sys.path.append('replication_code')
 
 import os
@@ -15,7 +16,6 @@ from hbsbm import get_bipartite_adjacency_matrix
 
 
 def main():
-
     # if we're inside the replication_code folder, move up one level
     if os.getcwd().split('/')[-1] == 'replication_code':
         os.chdir('..')
@@ -97,7 +97,6 @@ def main():
 
     """Table 3: Words predictive of block membership"""
 
-
     def get_bill_block_words(bill_table, level, naivebayesclass=MultinomialNB):
         bill_table = bill_table[bill_table[level].notna()]
 
@@ -118,7 +117,6 @@ def main():
         bill_category_loadings = bill_category_loadings.div(bill_category_loadings.sum(0), 1)
 
         return bill_category_loadings.T
-
 
     bill_category_loadings = {level: get_bill_block_words(wi_bills, f'block_level_{level}') for level in
                               range(len(wi_blockstate.levels))}
@@ -141,7 +139,6 @@ def main():
     wi_matrix = wi_positions.pivot_table('position_numeric', 'client_uuid', 'unified_bill_id',
                                          lambda x: int(any(x.notna())))
 
-
     def entropy(x):
         """
         Calculate entropy of a vector of counts
@@ -152,7 +149,6 @@ def main():
         x = x[x > 0]
         x = x / x.sum()
         return -sum(x * np.log(x))
-
 
     bill_client_cts = wi_matrix.groupby(client_block_level_0).sum()
     bill_client_cts = bill_client_cts.loc[:, bill_client_cts.sum(0) > 0]
@@ -187,9 +183,11 @@ def main():
 
     """Figure 2: Histogram of records per bill and per client"""
     records_per_bill = positions[['state_unified_bill_id', 'record_type']].value_counts().unstack()
-    records_per_bill_hist = records_per_bill.apply(lambda c: 2 ** (np.round(np.log2(c)))).apply(lambda c: c.value_counts())
+    records_per_bill_hist = records_per_bill.apply(lambda c: 2 ** (np.round(np.log2(c)))).apply(
+        lambda c: c.value_counts())
     records_per_client = positions[['state_client_uuid', 'record_type']].value_counts().unstack()
-    records_per_client_hist = records_per_client.apply(lambda c: 2 ** (round(np.log2(c)))).apply(lambda c: c.value_counts())
+    records_per_client_hist = records_per_client.apply(lambda c: 2 ** (round(np.log2(c)))).apply(
+        lambda c: c.value_counts())
 
     fig = figure_2_histogram(records_per_bill_hist, records_per_client_hist)
     fig.savefig('figures/figure_2_histogram.png', bbox_inches='tight', dpi=300)
@@ -252,8 +250,9 @@ def main():
 
     meta_topic_nmi = {}
     for l in range(len(wi_blockstate.levels)):
-        meta_topic_nmi[l] = normalized_mutual_info_score(wi_bills_sample.ncsl_metatopics.apply(lambda x: x.split(', ')[0]),
-                                                         wi_bills_sample[f'block_level_{l}'])
+        meta_topic_nmi[l] = normalized_mutual_info_score(
+            wi_bills_sample.ncsl_metatopics.apply(lambda x: x.split(', ')[0]),
+            wi_bills_sample[f'block_level_{l}'])
 
     fig = figure_5_nmi_b(topic_nmi, wi_bills_with_topics, meta_topic_nmi, wi_bills_sample)
     fig.savefig('figures/figure_5b_topic_nmi.pdf', bbox_inches='tight')
