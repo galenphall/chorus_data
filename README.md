@@ -15,7 +15,7 @@ If you use our code and/or data, please cite the paper as:
 ```
 
 ## Data
-The data used in this project is available online in the SPPQ Dataverse: https://dataverse.harvard.edu/dataverse/sppq. To download it locally, run the `code/download.py` file.
+The data used in this project is available online in the SPPQ Dataverse: https://dataverse.unc.edu/dataverse/sppq. To download it locally, run the `code/download.py` file.
 
 ## Code
 The python code used to generate the data and figures presented in the paper is available in the `code` folder. Code used to create the CHORUS dataset is available for review upon reasonable request.

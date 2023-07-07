@@ -4,3 +4,4 @@ scikit-learn~=1.0.2
 networkx~=2.8
 tqdm~=4.64.0
 matplotlib~=3.7.1
+gdown~=4.0.2
