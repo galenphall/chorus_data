@@ -196,7 +196,7 @@ def main():
     fig.savefig('figures/figure_2_histogram.pdf', bbox_inches='tight')
 
     """Figure 3: Wisconsin blockmodel"""
-    figure_3_blockmodel(wi_blockstate)
+    figure_3_blockmodel(wi_blockstate, )
     # this does not return a matplotlib figure, but rather saves a file
 
     """Figure 4: interest group-level projection of the Wisconsin blockmodel"""

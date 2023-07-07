@@ -56,7 +56,7 @@ def figure_2_histogram(records_per_bill_hist: pd.Series, records_per_client_hist
     return fig
 
 
-def figure_3_blockmodel(wi_blockstate, filename="WI_blockmodel_categorical.png"):
+def figure_3_blockmodel(wi_blockstate, filename="figure_3_blockmodel_spaghetti.png"):
     """
     Plot the blockmodel for Wisconsin using the "spaghetti" plot
     :param wi_blockstate:
