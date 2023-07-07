@@ -1,4 +1,5 @@
 # This is run from the outer directory, not the replication_code directory, so we need to add the replication_code directory to the path.
+import pathlib
 import sys
 
 sys.path.append('replication_code')
@@ -16,18 +17,23 @@ from hbsbm import get_bipartite_adjacency_matrix
 
 
 def main():
+
+    currpath: pathlib.Path = pathlib.Path.cwd()
+
     # if we're inside the replication_code folder, move up one level
-    if os.getcwd().split('/')[-1] == 'replication_code':
+    if currpath.name == 'replication_code':
         os.chdir('..')
+        currpath = pathlib.Path.cwd()
 
-    if not os.path.exists('figures'):
-        os.mkdir('figures')
+    # if '/figures' is not in the current directory, add it
+    if not (currpath / 'figures').exists():
+        currpath.mkdir('figures')
 
-    if not os.path.exists('tables'):
-        os.mkdir('tables')
+    if not (currpath / 'tables').exists():
+        currpath.mkdir('tables')
 
-    if not os.path.exists('data'):
-        os.mkdir('data')
+    if not (currpath / 'data').exists():
+        currpath.mkdir('data')
 
     """Load all position, bill, client data"""
     positions, clients, bills = load.positions(), load.clients(), load.bills()
@@ -261,7 +267,7 @@ def main():
     """Figure 6: client-level projection of blockstates for lobbying/testimony on energy and climate bills in four states"""
 
     adj_matrices = []
-    block_names = []
+    block_names_list = []
 
     for region, record_type, level in [
         ('CO', 'lobbying', 0),
@@ -308,7 +314,7 @@ def main():
                 'client_uuid').coalition_name.to_dict()
 
         adj_matrices.append(adj_matrix)
-        block_names.append(block_names)
+        block_names_list.append(block_names)
 
     fig = figure_6_energy_positions(adj_matrices, block_names, ['CO', 'TX', 'IL', 'MA'])
     fig.savefig('figures/figure_6_energy_positions.pdf', bbox_inches='tight')
