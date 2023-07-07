@@ -289,7 +289,7 @@ def main():
             region_positions.ncsl_metatopics.astype(str).str.contains('energy')
             ]
 
-        adj_matrix = get_bipartite_adjacency_matrix(region_blockstate, (5, 3))
+        adj_matrix = get_bipartite_adjacency_matrix(graph_positions, (5, 3))
         block_names = region_clients.set_index('client_uuid')[label_column].astype(str).to_dict()
 
         if not os.path.exists(f'tables/{region.upper()}_network_figure_clusters_named.xlsx'):
