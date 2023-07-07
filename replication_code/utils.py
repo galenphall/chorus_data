@@ -6,7 +6,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-def plot_bipartite(blockstate: gt.BlockState, filename=None, nedges=1000, hide_h=0, h_v_size=5.0, h_e_size=1.0, **kwargs):
+def plot_bipartite(blockstate, filename=None, nedges=1000, hide_h=0, h_v_size=5.0, h_e_size=1.0, **kwargs):
     """
     Plot the graph and group structure.
     :param blockstate: gt.BlockState object
