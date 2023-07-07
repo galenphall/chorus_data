@@ -121,8 +121,9 @@ def get_bipartite_adjacency_matrix(positions: pd.DataFrame, k_core: tuple = (5, 
     assert A.shape[0] > 0 and A.shape[1] > 0, "No data left after filtering"
 
     # Get the largest connected component
-    g = nx.from_pandas_adjacency(A)
-    giant_component = set(max(nx.connected_components(g), key=len))
+    G = nx.from_edgelist(A.stack().dropna().reset_index().values[:, :2].tolist())
+    giant_component = set(max(nx.connected_components(G), key=len))
+
     remaining_clients = giant_component & set(A.index)
     remaining_bills = giant_component & set(A.columns)
     A = A.reindex(index=remaining_clients, columns=remaining_bills)
