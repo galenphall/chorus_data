@@ -18,7 +18,7 @@ def plot_bipartite(blockstate, filename=None, nedges=1000, hide_h=0, h_v_size=5.
     :param **kwargs: keyword arguments passed to self.blockstate.draw method (https://graph-tool.skewed.de/static/doc/draw.html#graph_tool.draw.draw_hierarchy)
     """
     g = blockstate.g
-    cm = mpl.colors.LinearSegmentedColormap.from_list("mycmap", ["yellowgreen", "white", "crimson"])
+    cm = mpl.colors.LinearSegmentedColormap.from_list("mycmap", ["yellowgreen", "crimson"])
 
     blockstate.draw(layout='bipartite', output=filename,
                     subsample_edges=nedges, hshortcuts=1, hide=hide_h,
