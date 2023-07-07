@@ -1,6 +1,6 @@
-# This is run from the outer directory, not the code directory, so we need to add the code directory to the path.
+# This is run from the outer directory, not the replication_code directory, so we need to add the replication_code directory to the path.
 import sys
-sys.path.append('code')
+sys.path.append('replication_code')
 
 import os
 import numpy as np
@@ -16,8 +16,8 @@ from hbsbm import get_bipartite_adjacency_matrix
 
 def main():
 
-    # if we're inside the code folder, move up one level
-    if os.getcwd().split('/')[-1] == 'code':
+    # if we're inside the replication_code folder, move up one level
+    if os.getcwd().split('/')[-1] == 'replication_code':
         os.chdir('..')
 
     if not os.path.exists('figures'):

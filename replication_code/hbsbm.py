@@ -13,7 +13,7 @@ import tqdm
 def get_bipartite_graph(bipartite_adj_matrix: pd.DataFrame):
     """
     Construct a bipartite graph representing positions data from an adjacency matrix
-    This code is adapted from the sbmtm model code: https://github.com/martingerlach/hSBM_Topicmodel
+    This replication_code is adapted from the sbmtm model replication_code: https://github.com/martingerlach/hSBM_Topicmodel
     :param bipartite_adj_matrix: the adjacency matrix
     :return: a bipartite graph-tool graph
     """
@@ -66,7 +66,7 @@ def get_bipartite_graph(bipartite_adj_matrix: pd.DataFrame):
 def remove_redundant_levels(state: gt.BlockState):
     """
     Remove redundant levels from a blockstate
-    Taken from sbmtm model code: https://github.com/martingerlach/hSBM_Topicmodel
+    Taken from sbmtm model replication_code: https://github.com/martingerlach/hSBM_Topicmodel
     :param state: the blockstate
     :return:
     """
