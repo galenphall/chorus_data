@@ -1,17 +1,25 @@
+# This is run from the outer directory, not the code directory, so we need to add the code directory to the path.
+import sys
+sys.path.append('code')
+
 import os
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import normalized_mutual_info_score
 from sklearn.naive_bayes import MultinomialNB
-
 import load
 from figures import figure_5_nmi_a, figure_1_records_per_year, figure_2_histogram, figure_5_nmi_b, \
     figure_4_blockmodel_projection, figure_6_energy_positions, figure_3_blockmodel
 from hbsbm import get_bipartite_adjacency_matrix
 
 
-if __name__ == '__main__':
+def main():
+
+    # if we're inside the code folder, move up one level
+    if os.getcwd().split('/')[-1] == 'code':
+        os.chdir('..')
+
     if not os.path.exists('figures'):
         os.mkdir('figures')
 
