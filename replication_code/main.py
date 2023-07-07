@@ -161,7 +161,7 @@ def main():
     bill_entropy_table = wi_bills[wi_bills.legiscan_bill.notna()].set_index('unified_bill_id')[['title']].join(
         bill_entropy).dropna()
     bill_entropy_table = bill_entropy_table.sort_values('bill_entropy').drop_duplicates('title')
-    pd.concat([bill_entropy_table[::-1][:5], bill_entropy_table[:5]]).to_excel('/tables/bill_entropy.xlsx')
+    pd.concat([bill_entropy_table[::-1][:5], bill_entropy_table[:5]]).to_excel('tables/bill_entropy.xlsx')
 
     client_bill_cts = wi_matrix.T.groupby(bill_block_level_0).sum()
     client_bill_cts = client_bill_cts.loc[:, client_bill_cts.sum(0) > 0]
@@ -306,7 +306,7 @@ def main():
 
         else:
 
-            block_names = pd.read_excel(f'/tables/{region.upper()}_network_figure_clusters_named.xlsx').set_index(
+            block_names = pd.read_excel(f'tables/{region.upper()}_network_figure_clusters_named.xlsx').set_index(
                 'client_uuid').coalition_name.to_dict()
 
         adj_matrices.append(adj_matrix)
