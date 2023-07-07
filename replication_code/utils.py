@@ -6,7 +6,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-def plot_bipartite(blockstate, filename=None, nedges=1000, hide_h=0, h_v_size=5.0, h_e_size=1.0, **kwargs):
+def plot_bipartite(blockstate: gt.BlockState, filename=None, nedges=1000, hide_h=0, h_v_size=5.0, h_e_size=1.0, **kwargs):
     """
     Plot the graph and group structure.
     :param blockstate: gt.BlockState object
@@ -19,17 +19,18 @@ def plot_bipartite(blockstate, filename=None, nedges=1000, hide_h=0, h_v_size=5.
     """
     g = blockstate.g
     red = mpl.colors.to_rgba("crimson")
-    dark_red = [*[k * 0.5 for k in red[:3]], 1]
     yellowgreen = mpl.colors.to_rgba("yellowgreen")
 
-    cm = mpl.colors.LinearSegmentedColormap.from_list("mycmap", [dark_red, (1, 1, 1, 1), yellowgreen])
+    cm = mpl.colors.LinearSegmentedColormap.from_list("mycmap", [red, (1, 1, 1, 1), yellowgreen])
 
     blockstate.draw(layout='bipartite', output=filename,
                     subsample_edges=nedges, hshortcuts=1, hide=hide_h,
                     hvprops={'size': h_v_size},
                     heprops={'pen_width': h_e_size},
-                    edge_color=g.ep.weight, edge_gradient=[],
-                    ecmap=(cm, .8),
+                    edge_pen_width=0.5,
+                    edge_color=g.ep.weight.copy("double"),
+                    eorder=g.ep.weight,
+                    ecmap=(cm, 0.6), edge_gradient=[],
                     **kwargs,
                     )
 
