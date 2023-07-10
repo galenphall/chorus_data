@@ -12,7 +12,7 @@ def plot_bipartite(blockstate, filename=None, nedges=1000, hide_h=0, h_v_size=5.
     :param blockstate: gt.BlockState object
     :param filename: str; where to save the plot. if None, will not be saved
     :param nedges: int; subsample  to plot (faster, less memory)
-    :param hide_h: int; wether or not to hide the hierarchy
+    :param hide_h: int; whether or not to hide the hierarchy
     :param h_v_size: float; size of hierarchical vertices
     :param h_e_size: float; size of hierarchical edges
     :param **kwargs: keyword arguments passed to self.blockstate.draw method (https://graph-tool.skewed.de/static/doc/draw.html#graph_tool.draw.draw_hierarchy)

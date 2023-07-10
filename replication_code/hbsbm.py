@@ -9,6 +9,8 @@ import numpy as np
 import pandas as pd
 import tqdm
 
+from replication_code.main import CLIENT_ID_COL, BILL_ID_COL
+
 
 def get_bipartite_graph(bipartite_adj_matrix: pd.DataFrame):
     """
@@ -26,7 +28,7 @@ def get_bipartite_graph(bipartite_adj_matrix: pd.DataFrame):
     g = gt.Graph(directed=False)
 
     # define node properties
-    # name: clients - client_uuid, bills - unified_bill_id
+    # name: clients - CLIENT_ID_COL, bills - BILL_ID_COL
     # kind: clients - 0, bills - 1
     name = g.vp["name"] = g.new_vp("string")
     kind = g.vp["kind"] = g.new_vp("int")
@@ -98,16 +100,16 @@ def get_bipartite_adjacency_matrix(positions: pd.DataFrame, k_core: tuple = (5, 
     :return: the adjacency matrix
     """
 
-    selection = positions[positions.client_uuid.notnull()].copy()
-    selection = selection[selection.unified_bill_id.notnull()]
+    selection = positions[positions[CLIENT_ID_COL].notnull()].copy()
+    selection = selection[selection[BILL_ID_COL].notnull()]
 
-    n_client_positions = selection.client_uuid.value_counts()
-    n_bill_positions = selection.unified_bill_id.value_counts()
+    n_client_positions = selection[CLIENT_ID_COL].value_counts()
+    n_bill_positions = selection[BILL_ID_COL].value_counts()
 
-    selection = selection[selection.client_uuid.map(n_client_positions) >= k_core[0]]
-    selection = selection[selection.unified_bill_id.map(n_bill_positions) >= k_core[1]]
+    selection = selection[selection[CLIENT_ID_COL].map(n_client_positions) >= k_core[0]]
+    selection = selection[selection[BILL_ID_COL].map(n_bill_positions) >= k_core[1]]
 
-    A = selection.groupby(['client_uuid', 'unified_bill_id']).position_numeric.sum().unstack()
+    A = selection.groupby([CLIENT_ID_COL, BILL_ID_COL]).position_numeric.sum().unstack()
 
     A = np.sign(A)
 

@@ -4,6 +4,8 @@ import sys
 
 import pandas as pd
 
+
+
 sys.path.append('replication_code')
 
 import os
@@ -11,6 +13,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import normalized_mutual_info_score
 from sklearn.naive_bayes import MultinomialNB
 import load
+from figures import *
+
+CLIENT_ID_COL = 'state_client_id'
+BILL_ID_COL = 'state_unified_bill_id'
 
 def main():
 
@@ -31,7 +37,7 @@ def main():
     if not (currpath / 'data').exists():
         currpath.mkdir('data')
 
-    from figures import *
+
     from hbsbm import get_bipartite_adjacency_matrix
 
     """Load all position, bill, client data"""
@@ -69,8 +75,10 @@ def main():
         wi_bills[f'block_level_{level}'] = wi_bills.unified_bill_id.map(wi_block_levels[level])
         wi_clients[f'block_level_{level}'] = wi_clients.client_uuid.map(wi_block_levels[level])
 
-    n_blocked_clients = wi_clients.drop_duplicates('client_uuid').block_level_0.notna().sum()
-    n_blocked_bills = wi_bills.drop_duplicates('unified_bill_id').block_level_0.notna().sum()
+
+    n_blocked_clients = wi_clients.drop_duplicates(CLIENT_ID_COL).block_level_0.notna().sum()
+
+    n_blocked_bills = wi_bills.drop_duplicates(BILL_ID_COL).block_level_0.notna().sum()
 
     print(f"Interest groups (N={n_blocked_clients}) and bills (N={n_blocked_bills})")
 
@@ -94,6 +102,9 @@ def main():
         'L': 'Unicameral'
     }
 
+    # extract prefix from bill_id, map to chamber, and then group by state and record_type
+    positions['unified_prefix'] = positions.unified_bill_id.str.split('_').str[1]
+
     positions['chamber'] = positions.unified_prefix.str[0].map(chamber_map)
     chambers_covered = positions.groupby(['state', 'record_type']).chamber.apply(
         lambda chambers: sorted({c for c in chambers.unique() if sum(chambers == c) > 100})).map(', '.join)
@@ -105,10 +116,10 @@ def main():
     table_1.to_excel('tables/summary_statistics.xlsx')
 
     """Table 2: Example block"""
-    level_0_block_sizes = wi_clients.drop_duplicates('client_uuid').block_level_0.value_counts()
+    level_0_block_sizes = wi_clients.drop_duplicates(CLIENT_ID_COL).block_level_0.value_counts()
     highlighted_client_block = level_0_block_sizes.index[0]
     largest_block = wi_clients[wi_clients.block_level_0 == highlighted_client_block]
-    table_2 = largest_block.drop_duplicates('client_uuid')
+    table_2 = largest_block.drop_duplicates(CLIENT_ID_COL)
     table_2['ftm_final'] = table_2.apply(lambda r: r.ftm_final + ['', '*'][int(len(r.ftm_industry_merged) == 0)], 1)
     table_2 = table_2[['client_name', 'ftm_final']]
     table_2.columns = ['Interest Group', 'Industry']
@@ -153,9 +164,9 @@ def main():
     """Table 4 and 5: entropy of bills and clients"""
     # Calculate average entropy for members of each industry
 
-    client_block_level_0 = wi_clients.set_index('client_uuid').block_level_0.to_dict()
-    bill_block_level_0 = wi_bills.set_index('unified_bill_id').block_level_0.to_dict()
-    wi_matrix = wi_positions.pivot_table('position_numeric', 'client_uuid', 'unified_bill_id',
+    client_block_level_0 = wi_clients.set_index(CLIENT_ID_COL).block_level_0.to_dict()
+    bill_block_level_0 = wi_bills.set_index(BILL_ID_COL).block_level_0.to_dict()
+    wi_matrix = wi_positions.pivot_table('position_numeric', CLIENT_ID_COL, BILL_ID_COL,
                                          lambda x: int(any(x.notna())))
 
     def entropy(x):
@@ -173,7 +184,7 @@ def main():
     bill_client_cts = bill_client_cts.loc[:, bill_client_cts.sum(0) > 0]
     bill_entropy = bill_client_cts.apply(entropy).sort_values()[::-1]
     bill_entropy.name = 'bill_entropy'
-    bill_entropy_table = wi_bills[wi_bills.legiscan_bill.notna()].set_index('unified_bill_id')[['title']].join(
+    bill_entropy_table = wi_bills[wi_bills.legiscan_bill.notna()].set_index(BILL_ID_COL)[['title']].join(
         bill_entropy).dropna()
     bill_entropy_table = bill_entropy_table.sort_values('bill_entropy').drop_duplicates('title')
     pd.concat([bill_entropy_table[::-1][:5], bill_entropy_table[:5]]).to_excel('tables/bill_entropy.xlsx')
@@ -182,7 +193,7 @@ def main():
     client_bill_cts = client_bill_cts.loc[:, client_bill_cts.sum(0) > 0]
     client_entropy = client_bill_cts.apply(entropy).sort_values()[::-1]
     client_entropy.name = 'client_entropy'
-    client_entropy_table = wi_clients.drop_duplicates('client_uuid').set_index('client_uuid')[['client_name']].join(
+    client_entropy_table = wi_clients.drop_duplicates(CLIENT_ID_COL).set_index(CLIENT_ID_COL)[['client_name']].join(
         client_entropy).dropna()
     client_entropy_table = client_entropy_table.sort_values('client_entropy')
     pd.concat([client_entropy_table[::-1][:5], client_entropy_table[:5]]).to_excel('tables/client_entropy.xlsx')
@@ -201,10 +212,10 @@ def main():
     fig.savefig('figures/figure_1_histogram.pdf', bbox_inches='tight')
 
     """Figure 2: Histogram of records per bill and per client"""
-    records_per_bill = positions[['state_unified_bill_id', 'record_type']].value_counts().unstack()
+    records_per_bill = positions[[BILL_ID_COL, 'record_type']].value_counts().unstack()
     records_per_bill_hist = records_per_bill.apply(lambda c: 2 ** (np.round(np.log2(c)))).apply(
         lambda c: c.value_counts())
-    records_per_client = positions[['state_client_uuid', 'record_type']].value_counts().unstack()
+    records_per_client = positions[[CLIENT_ID_COL, 'record_type']].value_counts().unstack()
     records_per_client_hist = records_per_client.apply(lambda c: 2 ** (round(np.log2(c)))).apply(
         lambda c: c.value_counts())
 
@@ -226,14 +237,14 @@ def main():
     known_ftm_sample = wi_clients[
         wi_clients.ftm_industry_merged.apply(lambda x: len(x) > 0) &
         wi_clients.block_level_0.notna()
-        ].drop_duplicates('client_uuid')
+        ].drop_duplicates(CLIENT_ID_COL)
 
     # Get all clients with guessed industry labels and block memberships
     guessed_sample = wi_clients[
         wi_clients.ftm_final.apply(lambda x: len(x) > 0) &
         wi_clients.block_level_0.notna() &
         wi_clients.ftm_industry_merged.apply(lambda x: len(x) == 0)
-        ].drop_duplicates('client_uuid')
+        ].drop_duplicates(CLIENT_ID_COL)
 
     # Compute NMI for each level of the hierarchy between the block memberships and the known and guessed industry labels
     known_nmi = {}
@@ -254,13 +265,13 @@ def main():
     wi_bills_sample = wi_bills[
         wi_bills.ncsl_metatopics.apply(lambda x: (x is not None) and (len(x) > 0)) &
         wi_bills.block_level_0.notna()
-        ].drop_duplicates('unified_bill_id')
+        ].drop_duplicates(BILL_ID_COL)
 
     # Get all bills with topics and block memberships
     wi_bills_with_topics = wi_bills[
         wi_bills.ncsl_topics.apply(lambda x: (x is not None) and (len(x) > 0)) &
         wi_bills.block_level_0.notna()
-        ].drop_duplicates('unified_bill_id')
+        ].drop_duplicates(BILL_ID_COL)
 
     topic_nmi = {}
     for l in range(len(wi_blockstate.levels)):
@@ -310,7 +321,7 @@ def main():
             ]
 
         adj_matrix = get_bipartite_adjacency_matrix(graph_positions, (5, 3))
-        block_names = region_clients.set_index('client_uuid')[label_column].astype(str).to_dict()
+        block_names = region_clients.set_index(CLIENT_ID_COL)[label_column].astype(str).to_dict()
 
         if not os.path.exists(f'tables/{region.upper()}_network_figure_clusters_named.xlsx'):
 
@@ -318,14 +329,14 @@ def main():
             block_names = {k: v for k, v in block_names.items() if
                            (k in adj_matrix.index) and (v in n_clients) and (n_clients[v] > 3)}
             adj_matrix = adj_matrix.reindex(block_names)
-            region_clients[region_clients.client_uuid.isin(block_names)][
-                ['client_name', 'client_uuid', label_column]
-            ].drop_duplicates('client_uuid').to_excel(f'tables/{region.upper()}_network_figure_clusters.xlsx')
+            region_clients[region_clients[CLIENT_ID_COL].isin(block_names)][
+                ['client_name', CLIENT_ID_COL, label_column]
+            ].drop_duplicates(CLIENT_ID_COL).to_excel(f'tables/{region.upper()}_network_figure_clusters.xlsx')
 
         else:
 
             block_names = pd.read_excel(f'tables/{region.upper()}_network_figure_clusters_named.xlsx').set_index(
-                'client_uuid').coalition_name.to_dict()
+                CLIENT_ID_COL).coalition_name.to_dict()
 
         adj_matrices.append(adj_matrix)
         block_names_list.append(block_names)

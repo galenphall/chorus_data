@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from utils import plot_bipartite, cluster_agreement_plot
+from replication_code.main import CLIENT_ID_COL, BILL_ID_COL
+from utils import cluster_agreement_plot
 
 
 def figure_1_records_per_year(records_per_year):
@@ -63,6 +64,8 @@ def figure_3_blockmodel(wi_blockstate, filename="figure_3_blockmodel_spaghetti.p
     :param filename:
     :return:
     """
+    # imported here because this requires graph-tool
+    from utils import plot_bipartite
     plot_bipartite(wi_blockstate, f"figures/{filename}", nedges=5000)
 
 
@@ -78,12 +81,12 @@ def figure_4_blockmodel_projection(wi_positions, wi_block_levels, wi_clients, bl
     label_column = f'block_level_{block_level}'
 
     graph_positions = wi_positions[
-        wi_positions.client_uuid.map(wi_block_levels[0]).notna() &
-        wi_positions.unified_bill_id.map(wi_block_levels[0]).notna()
+        wi_positions[CLIENT_ID_COL].map(wi_block_levels[0]).notna() &
+        wi_positions[BILL_ID_COL].map(wi_block_levels[0]).notna()
         ]
 
-    c = wi_clients.set_index('client_uuid')[label_column].astype(str).to_dict()
-    B = np.sign(graph_positions.pivot_table('position_numeric', 'client_uuid', 'unified_bill_id', 'sum'))
+    c = wi_clients.set_index(CLIENT_ID_COL)[label_column].astype(str).to_dict()
+    B = np.sign(graph_positions.pivot_table('position_numeric', CLIENT_ID_COL, BILL_ID_COL, 'sum'))
     B = B.loc[B.index.map(c).notna()]
     B = B.loc[abs(B).sum(1) > 0]
 
@@ -110,13 +113,13 @@ def figure_5_nmi_a(known_nmi, known_ftm_sample, guessed_nmi, guessed_sample):
         mfc='w',
         mec='cornflowerblue',
         color='cornflowerblue',
-        label=f"FollowTheMoney (N={known_ftm_sample.client_uuid.nunique()})")
+        label=f"FollowTheMoney (N={known_ftm_sample[CLIENT_ID_COL].nunique()})")
     pd.Series(guessed_nmi)[range(4)].plot(
         marker='o',
         mfc='w',
         mec='orange',
         color='orange',
-        label=f"Naive Bayes (N={guessed_sample.client_uuid.nunique()})")
+        label=f"Naive Bayes (N={guessed_sample[CLIENT_ID_COL].nunique()})")
     ax.set_xlabel("Block hierarchy level")
     ax.set_ylabel("NMI")
     ax.set_ylim(0, 1)
@@ -141,13 +144,13 @@ def figure_5_nmi_b(topic_nmi, wi_bills_with_topics, meta_topic_nmi, wi_bills_sam
         mfc='w',
         mec='cornflowerblue',
         color='cornflowerblue',
-        label=f"Topic (N={wi_bills_with_topics.unified_bill_id.nunique()})")
+        label=f"Topic (N={wi_bills_with_topics[BILL_ID_COL].nunique()})")
     pd.Series(meta_topic_nmi)[range(4)].plot(
         marker='o',
         mfc='w',
         mec='orange',
         color='orange',
-        label=f"Meta-Topic (N={wi_bills_sample.unified_bill_id.nunique()})")
+        label=f"Meta-Topic (N={wi_bills_sample[BILL_ID_COL].nunique()})")
     ax.set_xlabel("Block hierarchy level")
     ax.set_ylabel("NMI")
     ax.set_ylim(0, 1)
