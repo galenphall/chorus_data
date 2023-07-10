@@ -65,8 +65,8 @@ def main():
     wi_bills = bills[bills.state == 'WI'].copy()
 
     for level in range(0, len(wi_blockstate.levels)):
-        wi_bills[f'block_level_{level}'] = wi_bills.unified_bill_id.map(wi_block_levels[level])
-        wi_clients[f'block_level_{level}'] = wi_clients.client_uuid.map(wi_block_levels[level])
+        wi_bills[f'block_level_{level}'] = wi_bills[BILL_ID_COL].map(wi_block_levels[level])
+        wi_clients[f'block_level_{level}'] = wi_clients[CLIENT_ID_COL].map(wi_block_levels[level])
 
     n_blocked_clients = wi_clients.drop_duplicates(CLIENT_ID_COL).block_level_0.notna().sum()
 
@@ -84,7 +84,7 @@ def main():
     n_positions = positions.groupby(['state', 'record_type']).position_numeric.value_counts().unstack()
     percent_neutral = (n_positions.apply(lambda p: p[0] / sum(p), 1) * 100).round(1)
     avg_per_bill = positions.groupby(['state', 'record_type']).apply(
-        lambda p: len(p) / p.unified_bill_id.nunique()).round(1)
+        lambda p: len(p) / p[BILL_ID_COL].nunique()).round(1)
     years_covered = positions.groupby(['state', 'record_type']).year.apply(lambda y: f"{min(y)}-{max(y)}")
 
     chamber_map = {
@@ -95,7 +95,7 @@ def main():
     }
 
     # extract prefix from bill_id, map to chamber, and then group by state and record_type
-    positions['unified_prefix'] = positions.unified_bill_id.str.split('_').str[1]
+    positions['unified_prefix'] = positions[BILL_ID_COL].str.split('_').str[1]
 
     positions['chamber'] = positions.unified_prefix.str[0].map(chamber_map)
     chambers_covered = positions.groupby(['state', 'record_type']).chamber.apply(
@@ -196,7 +196,7 @@ def main():
 
     """Figure 1: Histogram of records per year"""
     records_per_year = positions[
-        positions.client_uuid.notna() &
+        positions[CLIENT_ID_COL].notna() &
         (positions.year < 2022)].groupby(['record_type', 'year']).position_numeric.count().unstack().T
 
     fig = figure_1_records_per_year(records_per_year)
@@ -304,11 +304,11 @@ def main():
         }).applymap(lambda l: f"{region}{l}")
 
         for l in range(0, len(region_blockstate.levels)):
-            region_bills[f'block_level_{l}'] = region_bills.unified_bill_id.map(region_block_levels[l])
-            region_clients[f'block_level_{l}'] = region_clients.client_uuid.map(region_block_levels[l])
+            region_bills[f'block_level_{l}'] = region_bills[BILL_ID_COL].map(region_block_levels[l])
+            region_clients[f'block_level_{l}'] = region_clients[CLIENT_ID_COL].map(region_block_levels[l])
 
         graph_positions = region_positions[
-            region_positions.client_uuid.map(region_block_levels[2]).notna() &
+            region_positions[CLIENT_ID_COL].map(region_block_levels[2]).notna() &
             region_positions.ncsl_metatopics.astype(str).str.contains('energy')
             ]
 
