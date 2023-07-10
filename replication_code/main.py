@@ -69,6 +69,7 @@ def main():
         l: dict(zip(wi_graph.vp.name, wi_blockstate.project_partition(l, 0)))
         for l in range(len(wi_blockstate.levels))
     }).applymap(lambda l: f"wi{l}")
+    wi_block_levels.index = 'WI_' + wi_block_levels.index.astype(str)
 
     wi_clients = clients[clients.state == 'WI'].copy()
     wi_bills = bills[bills.state == 'WI'].copy()
@@ -76,9 +77,6 @@ def main():
     for level in range(0, len(wi_blockstate.levels)):
         wi_bills[f'block_level_{level}'] = wi_bills[BILL_ID_COL].map(wi_block_levels[level])
         wi_clients[f'block_level_{level}'] = wi_clients[CLIENT_ID_COL].map(wi_block_levels[level])
-
-    wi_clients = clients[clients.state == 'WI'].copy()
-    wi_bills = bills[bills.state == 'WI'].copy()
 
     ### Tables ###
 
