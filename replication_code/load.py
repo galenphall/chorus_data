@@ -60,7 +60,7 @@ def blockstates():
         ]
     }
 
-def blockassignments(cache=True):
+def block_assignments(cache=True):
     # load the block assignments (data/block_assignments.csv)
     if cache:
         # Save the block assignments in RAM
