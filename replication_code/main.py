@@ -61,7 +61,7 @@ def main():
     wi_blockstate = blockstates[('WI', 'lobbying')]
     wi_positions = positions[positions.state == 'WI']
     wi_block_levels = block_assignments[(block_assignments.state == 'WI') & (block_assignments.record_type == 'lobbying')]
-    wi_block_levels = wi_block_levels.set_index('id').drop(columns=['state', 'record_type'])
+    wi_block_levels = wi_block_levels.set_index('entity_id').drop(columns=['state', 'record_type'])
     wi_block_levels = wi_block_levels.applymap(lambda l: f"wi{l}")
 
     # add state prefix to client/bill ids because SBMs are state-specific
@@ -71,8 +71,8 @@ def main():
     wi_bills = bills[bills.state == 'WI'].copy()
 
     for level in range(0, len(wi_blockstate.levels)):
-        wi_bills[f'block_level_{level}'] = wi_bills[BILL_ID_COL].map(wi_block_levels[level])
-        wi_clients[f'block_level_{level}'] = wi_clients[CLIENT_ID_COL].map(wi_block_levels[level])
+        wi_bills[f'block_level_{level}'] = wi_bills[BILL_ID_COL].map(wi_block_levels[level].to_dict())
+        wi_clients[f'block_level_{level}'] = wi_clients[CLIENT_ID_COL].map(wi_block_levels[level].to_dict())
 
     ### Tables ###
 
@@ -296,22 +296,20 @@ def main():
         ('MA', 'lobbying', 1)]:
 
         label_column = f'block_level_{level}'
-        region_blockstate = blockstates[region, record_type]
         region_positions = positions[positions.state == region.upper()].copy()
         region_clients = clients[clients.state == region.upper()].copy()
         region_bills = bills[bills.state == region.upper()].copy()
-        region_graph = region_blockstate.g
-        region_block_levels = pd.DataFrame({
-            l: dict(zip(region_graph.vp.name, region_blockstate.project_partition(l, 0)))
-            for l in range(len(region_blockstate.levels))
-        }).applymap(lambda l: f"{region}{l}")
+        region_block_assignments = block_assignments[(block_assignments.state == region.upper()) & (block_assignments.record_type == record_type)].copy()
+        region_block_assignments = region_block_assignments.drop(columns=['state', 'record_type'])
+        region_block_assignments = region_block_assignments.set_index('entity_id')
+        n_levels = region_block_assignments.dropna(axis=1).shape[1]
 
-        for l in range(0, len(region_blockstate.levels)):
-            region_bills[f'block_level_{l}'] = region_bills[BILL_ID_COL].map(region_block_levels[l])
-            region_clients[f'block_level_{l}'] = region_clients[CLIENT_ID_COL].map(region_block_levels[l])
+        for l in range(n_levels):
+            region_bills[f'block_level_{l}'] = region_bills[BILL_ID_COL].map(region_block_assignments[l])
+            region_clients[f'block_level_{l}'] = region_clients[CLIENT_ID_COL].map(region_block_assignments[l])
 
         graph_positions = region_positions[
-            region_positions[CLIENT_ID_COL].map(region_block_levels[2]).notna() &
+            region_positions[CLIENT_ID_COL].isin(region_block_assignments.entity_id) &
             region_positions.ncsl_metatopics.astype(str).str.contains('energy')
             ]
 
