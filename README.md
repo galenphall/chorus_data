@@ -1,6 +1,5 @@
-![](/Users/ejhall2/Desktop/Projects/chorus_data/CHORUS_logo.pdf)'
-
-**Replication Materials** for 
+![](/Users/ejhall2/Desktop/Projects/chorus_data/CHORUS logo.png)
+# Replication Materials
 
 Galen Hall, Joshua Basseches, Rebecca Bromley-Trujillo, and Trevor Culhane, "CHORUS: A new dataset of state interest group policy positions in the United States", _State Politics & Policy Quarterly_ (forthcoming 2023).
 
@@ -17,7 +16,9 @@ If you use our code and/or data, please cite the paper as:
 ```
 
 ## Data
-The data used in this project is available online in the SPPQ Dataverse: https://dataverse.unc.edu/dataverse/sppq. To download it locally, run the `code/download.py` file.
+The dataset used in the related paper is available online in the SPPQ Dataverse: https://dataverse.unc.edu/dataverse/sppq. To download it locally, run the `code/download.py` file. 
+
+_Note that we will maintain updated versions of this dataset at a different location._ For replicating the results in the paper, please use the version of the dataset available in the SPPQ Dataverse.
 
 ## Code
 The python code used to generate the data and figures presented in the paper is available in the `code` folder. Code used to create the CHORUS dataset is available for review upon reasonable request.
