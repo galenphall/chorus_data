@@ -56,7 +56,7 @@ def main():
             # and did not use unique entity_ids across states
             blocks_df['entity_id'] = blocks_df.state + '_' + blocks_df['entity_id'].astype(str)
             block_assignments = pd.concat([block_assignments, blocks_df], axis=0, ignore_index=True)
-        block_assignments.to_csv('data/block_assignments.csv', index=False)
+        block_assignments.to_parquet('data/block_assignments.parquet', index=False)
     else:
         block_assignments = load.block_assignments()
 
@@ -69,7 +69,6 @@ def main():
         l: dict(zip(wi_graph.vp.name, wi_blockstate.project_partition(l, 0)))
         for l in range(len(wi_blockstate.levels))
     }).applymap(lambda l: f"wi{l}")
-    wi_block_levels
 
     wi_clients = clients[clients.state == 'WI'].copy()
     wi_bills = bills[bills.state == 'WI'].copy()
@@ -301,17 +300,13 @@ def main():
         ('MA', 'lobbying', 1)]:
 
         label_column = f'block_level_{level}'
+
         region_positions = positions[positions.state == region.upper()].copy()
-        region_clients = clients[clients.state == region.upper()].copy()
-        region_bills = bills[bills.state == region.upper()].copy()
-        region_block_assignments = block_assignments[(block_assignments.state == region.upper()) & (block_assignments.record_type == record_type)].copy()
+
+        region_block_assignments = block_assignments[
+            (block_assignments.state == region.upper()) & (block_assignments.record_type == record_type)].copy()
         region_block_assignments = region_block_assignments.drop(columns=['state', 'record_type'])
         region_block_assignments = region_block_assignments.set_index('entity_id')
-        n_levels = region_block_assignments.dropna(axis=1).shape[1]
-
-        for l in range(n_levels):
-            region_bills[f'block_level_{l}'] = region_bills[BILL_ID_COL].map(region_block_assignments[l])
-            region_clients[f'block_level_{l}'] = region_clients[CLIENT_ID_COL].map(region_block_assignments[l])
 
         graph_positions = region_positions[
             region_positions[CLIENT_ID_COL].isin(region_block_assignments.index.values) &
@@ -319,9 +314,19 @@ def main():
             ]
 
         adj_matrix = get_bipartite_adjacency_matrix(graph_positions, (5, 3))
-        block_names = region_clients.set_index(CLIENT_ID_COL)[label_column].astype(str).to_dict()
+
 
         if not os.path.exists(f'data/{region.upper()}_network_figure_clusters_named.xlsx'):
+
+            region_clients = clients[clients.state == region.upper()].copy()
+            region_bills = bills[bills.state == region.upper()].copy()
+            n_levels = region_block_assignments.dropna(axis=1).shape[1]
+
+            for l in range(n_levels):
+                region_bills[f'block_level_{l}'] = region_bills[BILL_ID_COL].map(region_block_assignments[l])
+                region_clients[f'block_level_{l}'] = region_clients[CLIENT_ID_COL].map(region_block_assignments[l])
+
+            block_names = region_clients.set_index(CLIENT_ID_COL)[label_column].astype(str).to_dict()
 
             n_clients = abs(adj_matrix).groupby(block_names).apply(len)
             block_names = {k: v for k, v in block_names.items() if
