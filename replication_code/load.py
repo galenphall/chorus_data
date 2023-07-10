@@ -74,7 +74,7 @@ def blockstates(cache=True):
 def block_assignments(cache=True):
 
     def _load_block_assignments():
-        df = pd.read_csv('data/block_assignments.parquet')
+        df = pd.read_parquet('data/block_assignments.parquet')
         # convert stringified integer column names to integers
         df.columns = [int(col) if col.isnumeric() else col for col in df.columns]
         return df
