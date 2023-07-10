@@ -33,32 +33,43 @@ def clients(cache=True):
         return pd.read_parquet('data/clients.parquet')
 
 
-def blockstates():
-    return {
-        (state, record_type): pickle.load(
+def blockstates(cache=True):
+    def _blockstate(state, record_type):
+        return pickle.load(
             open(f"data/hbsbm/{state}_{record_type}_corrected_categorical_blockstate.pkl", 'rb'))
-        for state, record_type in [
-            ('MA', 'lobbying'),
-            ('CO', 'lobbying'),
-            ('TX', 'testimony'),
-            ('IA', 'lobbying'),
-            ('MT', 'lobbying'),
-            ('NE', 'lobbying'),
-            ('WI', 'lobbying'),
-            ('CO', 'testimony'),
-            ('MT', 'testimony'),
-            ('AZ', 'testimony'),
-            ('MO', 'testimony'),
-            ('OH', 'testimony'),
-            ('FL', 'testimony'),
-            ('NJ', 'lobbying'),
-            ('IL', 'testimony'),
-            ('MD', 'testimony'),
-            ('KS', 'testimony'),
-            ('SD', 'testimony'),
-            ('RI', 'lobbying'),
-        ]
-    }
+    def _get_all_blockstates():
+        return {
+            (state, record_type): _blockstate(state, record_type)
+            for state, record_type in [
+                ('MA', 'lobbying'),
+                ('CO', 'lobbying'),
+                ('TX', 'testimony'),
+                ('IA', 'lobbying'),
+                ('MT', 'lobbying'),
+                ('NE', 'lobbying'),
+                ('WI', 'lobbying'),
+                ('CO', 'testimony'),
+                ('MT', 'testimony'),
+                ('AZ', 'testimony'),
+                ('MO', 'testimony'),
+                ('OH', 'testimony'),
+                ('FL', 'testimony'),
+                ('NJ', 'lobbying'),
+                ('IL', 'testimony'),
+                ('MD', 'testimony'),
+                ('KS', 'testimony'),
+                ('SD', 'testimony'),
+                ('RI', 'lobbying'),
+            ]
+        }
+
+    if cache:
+        # Save the blockstates in RAM
+        if not hasattr(blockstates, 'blockstates'):
+            blockstates.blockstates = _get_all_blockstates()
+        return blockstates.blockstates
+    else:
+        return _get_all_blockstates()
 
 def block_assignments(cache=True):
     # load the block assignments (data/block_assignments.csv)
