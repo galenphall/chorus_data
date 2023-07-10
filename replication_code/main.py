@@ -108,7 +108,7 @@ def main():
     highlighted_client_block = level_0_block_sizes.index[0]
     largest_block = wi_clients[wi_clients.block_level_0 == highlighted_client_block]
     table_2 = largest_block.drop_duplicates(CLIENT_ID_COL)
-    table_2 = table_2[['client_name', 'ftm_final']]
+    table_2 = table_2[['client_name', 'ftm_industry']]
     table_2.columns = ['Interest Group', 'Industry']
     table_2.to_excel('tables/wi_example_client_block.xlsx', index=False)
 
