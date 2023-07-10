@@ -64,8 +64,8 @@ def block_assignments(cache=True):
     # load the block assignments (data/block_assignments.csv)
     if cache:
         # Save the block assignments in RAM
-        if not hasattr(block_assignments, 'blockassignments'):
-            block_assignments.blockassignments = pd.read_csv('data/block_assignments.csv')
-        return block_assignments.blockassignments
+        if not hasattr(block_assignments, 'block_assignments'):
+            block_assignments.block_assignments = pd.read_csv('data/block_assignments.csv')
+        return block_assignments.block_assignments
     else:
         return pd.read_csv('data/block_assignments.csv')
