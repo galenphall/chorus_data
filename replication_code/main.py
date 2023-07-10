@@ -38,28 +38,37 @@ def main():
     blockstates = load.blockstates()
 
     # make dataframe of block assignments from blockstates
-    block_assignments = pd.DataFrame()
-    for state, record_type in blockstates.keys():
-        blockstate = blockstates[(state, record_type)]
-        blocks = {level: dict(zip(
-            blockstate.g.vp.name,
-            blockstate.project_partition(level, 0)
-        )) for level in range(len(blockstate.levels))}
-        blocks_df = pd.DataFrame(blocks)
-        blocks_df['state'] = state
-        blocks_df['record_type'] = record_type
-        block_assignments = pd.concat([block_assignments, blocks_df])
-    block_assignments.to_csv('data/block_assignments.csv', index=False)
+    if not (currpath / 'data/block_assignments.csv').exists():
+        block_assignments = pd.DataFrame()
+        for state, record_type in blockstates.keys():
+            blockstate = blockstates[(state, record_type)]
+            blocks = {level: dict(zip(
+                blockstate.g.vp.name,
+                blockstate.project_partition(level, 0)
+            )) for level in range(len(blockstate.levels))}
+            blocks_df = pd.DataFrame(blocks)
+            blocks_df['state'] = state
+            blocks_df['record_type'] = record_type
+            blocks_df.index.name = 'id'
+            blocks_df = blocks_df.reset_index()
+            block_assignments = pd.concat([block_assignments, blocks_df])
+        block_assignments.to_csv('data/block_assignments.csv', index=False)
+    else:
+        block_assignments = load.blockassignments()
 
     """Load Wisconsin data"""
     wi_blockstate = blockstates[('WI', 'lobbying')]
     wi_positions = positions[positions.state == 'WI']
 
     wi_graph = wi_blockstate.g
+
     wi_block_levels = pd.DataFrame({
         l: dict(zip(wi_graph.vp.name, wi_blockstate.project_partition(l, 0)))
         for l in range(len(wi_blockstate.levels))
     }).applymap(lambda l: f"wi{l}")
+
+    # add state prefix to client/bill ids because SBMs are state-specific
+    wi_block_levels.index = 'WI_' + wi_block_levels.index
 
     wi_clients = clients[clients.state == 'WI'].copy()
     wi_bills = bills[bills.state == 'WI'].copy()
