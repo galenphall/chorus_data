@@ -54,18 +54,14 @@ def main():
             block_assignments = pd.concat([block_assignments, blocks_df])
         block_assignments.to_csv('data/block_assignments.csv', index=False)
     else:
-        block_assignments = load.blockassignments()
+        block_assignments = load.block_assignments()
 
     """Load Wisconsin data"""
     wi_blockstate = blockstates[('WI', 'lobbying')]
     wi_positions = positions[positions.state == 'WI']
-
-    wi_graph = wi_blockstate.g
-
-    wi_block_levels = pd.DataFrame({
-        l: dict(zip(wi_graph.vp.name, wi_blockstate.project_partition(l, 0)))
-        for l in range(len(wi_blockstate.levels))
-    }).applymap(lambda l: f"wi{l}")
+    wi_block_levels = block_assignments[(block_assignments.state == 'WI') & (block_assignments.record_type == 'lobbying')]
+    wi_block_levels = wi_block_levels.set_index('id').drop(columns=['state', 'record_type'])
+    wi_block_levels = wi_block_levels.applymap(lambda l: f"wi{l}")
 
     # add state prefix to client/bill ids because SBMs are state-specific
     wi_block_levels.index = 'WI_' + wi_block_levels.index
@@ -76,16 +72,6 @@ def main():
     for level in range(0, len(wi_blockstate.levels)):
         wi_bills[f'block_level_{level}'] = wi_bills[BILL_ID_COL].map(wi_block_levels[level])
         wi_clients[f'block_level_{level}'] = wi_clients[CLIENT_ID_COL].map(wi_block_levels[level])
-
-    n_blocked_clients = wi_clients.drop_duplicates(CLIENT_ID_COL).block_level_0.notna().sum()
-
-    n_blocked_bills = wi_bills.drop_duplicates(BILL_ID_COL).block_level_0.notna().sum()
-
-    print(f"Interest groups (N={n_blocked_clients}) and bills (N={n_blocked_bills})")
-
-    position_counts = pd.Series([*wi_graph.ep.weight]).value_counts()
-
-    print(f"{position_counts[1]} support positions and {position_counts[-1]} oppose positions")
 
     ### Tables ###
 
@@ -198,6 +184,13 @@ def main():
         client_entropy).dropna()
     client_entropy_table = client_entropy_table.sort_values('client_entropy')
     pd.concat([client_entropy_table[::-1][:5], client_entropy_table[:5]]).to_excel('tables/client_entropy.xlsx')
+
+
+    # Clean up memory
+    del bill_client_cts, client_bill_cts, wi_matrix
+    del bill_entropy, client_entropy, bill_entropy_table, client_entropy_table
+    del bill_category_loadings, top_words, n_bills, pct_passed
+    del table_3, table_2, table_1
 
     ################
     ### Figures ###
