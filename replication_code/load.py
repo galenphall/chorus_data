@@ -72,11 +72,18 @@ def blockstates(cache=True):
         return _get_all_blockstates()
 
 def block_assignments(cache=True):
+
+    def _load_block_assignments():
+        df = pd.read_csv('data/block_assignments.csv')
+        # convert stringified integer column names to integers
+        df.columns = [int(col) if col.isnumeric() else col for col in df.columns]
+        return df
+
     # load the block assignments (data/block_assignments.csv)
     if cache:
         # Save the block assignments in RAM
         if not hasattr(block_assignments, 'block_assignments'):
-            block_assignments.block_assignments = pd.read_csv('data/block_assignments.csv')
+            block_assignments.block_assignments = _load_block_assignments()
         return block_assignments.block_assignments
     else:
-        return pd.read_csv('data/block_assignments.csv')
+        return _load_block_assignments()
