@@ -55,7 +55,7 @@ def main():
             # add state to entity_id because blockmodels were run separately for each state
             # and did not use unique entity_ids across states
             blocks_df['entity_id'] = blocks_df.state + '_' + blocks_df['entity_id'].astype(str)
-            block_assignments = pd.concat([block_assignments, blocks_df])
+            block_assignments = pd.concat([block_assignments, blocks_df], axis=0, ignore_index=True)
         block_assignments.to_csv('data/block_assignments.csv', index=False)
     else:
         block_assignments = load.block_assignments()
@@ -108,7 +108,6 @@ def main():
     highlighted_client_block = level_0_block_sizes.index[0]
     largest_block = wi_clients[wi_clients.block_level_0 == highlighted_client_block]
     table_2 = largest_block.drop_duplicates(CLIENT_ID_COL)
-    table_2['ftm_final'] = table_2.apply(lambda r: r.ftm_final + ['', '*'][int(len(r.ftm_industry_merged) == 0)], 1)
     table_2 = table_2[['client_name', 'ftm_final']]
     table_2.columns = ['Interest Group', 'Industry']
     table_2.to_excel('tables/wi_example_client_block.xlsx', index=False)
@@ -230,15 +229,14 @@ def main():
     """Figure 5a: NMI for known and guessed industry labels in the Wisconsin blockmodel for each level of the hierarchy"""
     # Get all clients with known industry labels and block memberships
     known_ftm_sample = wi_clients[
-        wi_clients.ftm_industry_merged.apply(lambda x: len(x) > 0) &
+        ~wi_clients.ftm_guessed &
         wi_clients.block_level_0.notna()
         ].drop_duplicates(CLIENT_ID_COL)
 
     # Get all clients with guessed industry labels and block memberships
     guessed_sample = wi_clients[
-        wi_clients.ftm_final.apply(lambda x: len(x) > 0) &
-        wi_clients.block_level_0.notna() &
-        wi_clients.ftm_industry_merged.apply(lambda x: len(x) == 0)
+        wi_clients.ftm_guessed &
+        wi_clients.block_level_0.notna()
         ].drop_duplicates(CLIENT_ID_COL)
 
     # Compute NMI for each level of the hierarchy between the block memberships and the known and guessed industry labels
@@ -246,9 +244,9 @@ def main():
     guessed_nmi = {}
     for l in range(len(wi_blockstate.levels)):
         known_nmi[l] = normalized_mutual_info_score(
-            known_ftm_sample.ftm_industry_merged.apply(lambda x: x[0] if len(x) > 0 else None),
+            known_ftm_sample.ftm_industry.apply(lambda x: x[0] if len(x) > 0 else None),
             known_ftm_sample[f'block_level_{l}'])
-        guessed_nmi[l] = normalized_mutual_info_score(guessed_sample.ftm_final,
+        guessed_nmi[l] = normalized_mutual_info_score(guessed_sample.ftm_industry,
                                                       guessed_sample[f'block_level_{l}'])
 
     fig, ax = figure_5_nmi_a(known_nmi, known_ftm_sample, guessed_nmi, guessed_sample)
