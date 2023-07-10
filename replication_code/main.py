@@ -2,19 +2,15 @@
 import pathlib
 import sys
 
+import pandas as pd
+
 sys.path.append('replication_code')
 
 import os
-import numpy as np
-import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import normalized_mutual_info_score
 from sklearn.naive_bayes import MultinomialNB
 import load
-from figures import figure_5_nmi_a, figure_1_records_per_year, figure_2_histogram, figure_5_nmi_b, \
-    figure_4_blockmodel_projection, figure_6_energy_positions, figure_3_blockmodel
-from hbsbm import get_bipartite_adjacency_matrix
-
 
 def main():
 
@@ -35,9 +31,26 @@ def main():
     if not (currpath / 'data').exists():
         currpath.mkdir('data')
 
+    from figures import *
+    from hbsbm import get_bipartite_adjacency_matrix
+
     """Load all position, bill, client data"""
     positions, clients, bills = load.positions(), load.clients(), load.bills()
     blockstates = load.blockstates()
+
+    # make dataframe of block assignments from blockstates
+    block_assignments = pd.DataFrame()
+    for state, record_type in blockstates.keys():
+        blockstate = blockstates[(state, record_type)]
+        blocks = {level : dict(zip(
+            blockstate.g.vp.name,
+            blockstate.project_partition(level, 0)
+        )) for level in range(len(blockstate.levels))}
+        blocks_df = pd.DataFrame(blocks)
+        blocks_df['state'] = state
+        blocks_df['record_type'] = record_type
+        block_assignments = pd.concat([block_assignments, blocks_df])
+    block_assignments.to_csv('data/block_assignments.csv', index=False)
 
     """Load Wisconsin data"""
     wi_blockstate = blockstates[('WI', 'lobbying')]
@@ -264,7 +277,8 @@ def main():
     fig.savefig('figures/figure_5b_topic_nmi.pdf', bbox_inches='tight')
     fig.savefig('figures/figure_5b_topic_nmi.png', bbox_inches='tight', dpi=300)
 
-    """Figure 6: client-level projection of blockstates for lobbying/testimony on energy and climate bills in four states"""
+    """Figure 6: client-level projection of blockstates for lobbying/testimony on energy and climate bills in four 
+    states """
 
     adj_matrices = []
     block_names_list = []
