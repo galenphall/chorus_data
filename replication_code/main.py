@@ -2,10 +2,6 @@
 import pathlib
 import sys
 
-import pandas as pd
-
-
-
 sys.path.append('replication_code')
 
 import os
@@ -14,12 +10,10 @@ from sklearn.metrics import normalized_mutual_info_score
 from sklearn.naive_bayes import MultinomialNB
 import load
 from figures import *
+from config import CLIENT_ID_COL, BILL_ID_COL
 
-CLIENT_ID_COL = 'state_client_id'
-BILL_ID_COL = 'state_unified_bill_id'
 
 def main():
-
     currpath: pathlib.Path = pathlib.Path.cwd()
 
     # if we're inside the replication_code folder, move up one level
@@ -29,14 +23,13 @@ def main():
 
     # if '/figures' is not in the current directory, add it
     if not (currpath / 'figures').exists():
-        currpath.mkdir('figures')
+        (currpath / 'figures').mkdir()
 
     if not (currpath / 'tables').exists():
-        currpath.mkdir('tables')
+        (currpath / 'tables').mkdir()
 
     if not (currpath / 'data').exists():
-        currpath.mkdir('data')
-
+        (currpath / 'data').mkdir()
 
     from hbsbm import get_bipartite_adjacency_matrix
 
@@ -48,7 +41,7 @@ def main():
     block_assignments = pd.DataFrame()
     for state, record_type in blockstates.keys():
         blockstate = blockstates[(state, record_type)]
-        blocks = {level : dict(zip(
+        blocks = {level: dict(zip(
             blockstate.g.vp.name,
             blockstate.project_partition(level, 0)
         )) for level in range(len(blockstate.levels))}
@@ -74,7 +67,6 @@ def main():
     for level in range(0, len(wi_blockstate.levels)):
         wi_bills[f'block_level_{level}'] = wi_bills.unified_bill_id.map(wi_block_levels[level])
         wi_clients[f'block_level_{level}'] = wi_clients.client_uuid.map(wi_block_levels[level])
-
 
     n_blocked_clients = wi_clients.drop_duplicates(CLIENT_ID_COL).block_level_0.notna().sum()
 
