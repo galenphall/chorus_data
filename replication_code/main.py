@@ -38,7 +38,7 @@ def main():
     blockstates = load.blockstates()
 
     # make dataframe of block assignments from blockstates
-    if not (currpath / 'data/block_assignments.csv').exists():
+    if not (currpath / 'data/block_assignments.parquet').exists():
         block_assignments = pd.DataFrame()
         for state, record_type in blockstates.keys():
             blockstate = blockstates[(state, record_type)]
