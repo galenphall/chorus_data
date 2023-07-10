@@ -51,6 +51,9 @@ def main():
             blocks_df['record_type'] = record_type
             blocks_df.index.name = 'entity_id'
             blocks_df = blocks_df.reset_index(drop=False)
+
+            # add state to entity_id because blockmodels were run separately for each state
+            # and did not use unique entity_ids across states
             blocks_df['entity_id'] = blocks_df.state + '_' + blocks_df['entity_id'].astype(str)
             block_assignments = pd.concat([block_assignments, blocks_df])
         block_assignments.to_csv('data/block_assignments.csv', index=False)
@@ -63,9 +66,6 @@ def main():
     wi_block_levels = block_assignments[(block_assignments.state == 'WI') & (block_assignments.record_type == 'lobbying')]
     wi_block_levels = wi_block_levels.set_index('entity_id').drop(columns=['state', 'record_type'])
     wi_block_levels = wi_block_levels.applymap(lambda l: f"wi{l}")
-
-    # add state prefix to client/bill ids because SBMs are state-specific
-    wi_block_levels.index = 'WI_' + wi_block_levels.index
 
     wi_clients = clients[clients.state == 'WI'].copy()
     wi_bills = bills[bills.state == 'WI'].copy()
