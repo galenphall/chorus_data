@@ -1,3 +1,5 @@
+![](/Users/ejhall2/Desktop/Projects/chorus_data/CHORUS_logo.pdf)'
+
 **Replication Materials** for 
 
 Galen Hall, Joshua Basseches, Rebecca Bromley-Trujillo, and Trevor Culhane, "CHORUS: A new dataset of state interest group policy positions in the United States", _State Politics & Policy Quarterly_ (forthcoming 2023).

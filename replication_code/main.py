@@ -307,7 +307,7 @@ def main():
             region_clients[f'block_level_{l}'] = region_clients[CLIENT_ID_COL].map(region_block_assignments[l])
 
         graph_positions = region_positions[
-            region_positions[CLIENT_ID_COL].isin(region_block_assignments.entity_id) &
+            region_positions[CLIENT_ID_COL].isin(region_block_assignments.index.values) &
             region_positions.ncsl_metatopics.astype(str).str.contains('energy')
             ]
 

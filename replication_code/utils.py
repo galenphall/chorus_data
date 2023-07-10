@@ -5,6 +5,63 @@ import networkx as nx
 import numpy as np
 from matplotlib import pyplot as plt
 
+def fast_spring_layout(G: nx.Graph, iterations=50, seed=42, k=None):
+    """
+    A faster version of nx.spring_layout that works by subdividing the graph into halves recursively.
+    For each half, the layout is computed as if all the nodes in each half were merged.
+    :param G: the graph
+    :param iterations: the number of iterations
+    :param seed: the random seed
+    :param k: the spring constant
+    :return: the positions
+    """
+    def _merge_halves(G, pos, k=None):
+        # Get the nodes in each half
+        nodes = np.array(list(G.nodes))
+        n = len(nodes)
+        half = n // 2
+        left = nodes[:half]
+        right = nodes[half:]
+
+        # base case: if there are only two nodes, just use the spring layout
+        if n == 2:
+            return nx.spring_layout(G, k=k, pos=pos)
+
+        # Calculate the total edge weight between the two halves
+        edges = np.array(list(G.edges))
+        left_edges = np.isin(edges, left)
+        right_edges = np.isin(edges, right)
+        edge_weights = G.edges[list(edges[left_edges & right_edges])].values()
+        total_edge_weight = sum(edge_weights)
+
+        # Get an optimal value for k
+        if k is None:
+            k = np.sqrt(total_edge_weight / n)
+
+        # Calculate the bulk positions for each half, treating them as single nodes
+        bulk_G = nx.Graph()
+        bulk_G.add_node("left")
+        bulk_G.add_node("right")
+        bulk_G.add_edge("left", "right", weight=total_edge_weight)
+        bulk_pos = nx.spring_layout(bulk_G, k=k, pos=pos)
+
+        # Calculate the positions for each half recursively
+        left_pos = _merge_halves(G.subgraph(left), pos, k=k)
+        right_pos = _merge_halves(G.subgraph(right), pos, k=k)
+
+        # Merge the positions
+        left_pos = {node: pos + bulk_pos['left'] for node, pos in left_pos.items()}
+        right_pos = {node: pos + bulk_pos['right'] for node, pos in right_pos.items()}
+
+        # Return the merged positions
+        return {**left_pos, **right_pos}
+
+    # Start with random positions
+    pos = nx.random_layout(G, seed=seed)
+
+    # Run the recursive algorithm
+    return _merge_halves(G, pos, k=k)
+
 
 def plot_bipartite(blockstate, filename=None, nedges=1000, hide_h=0, h_v_size=5.0, h_e_size=1.0, **kwargs):
     """
