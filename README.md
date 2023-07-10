@@ -16,9 +16,18 @@ If you use our code and/or data, please cite the paper as:
 ```
 
 ## Data
-The dataset used in the related paper is available online in the SPPQ Dataverse: https://dataverse.unc.edu/dataverse/sppq. To download it locally, run the `code/download.py` file. 
+The dataset used in the related paper is available online in the SPPQ Dataverse: https://dataverse.unc.edu/dataverse/sppq. To download it locally, run the `code/download.py` file.
 
 _Note that we will maintain updated versions of this dataset at a different location._ For replicating the results in the paper, please use the version of the dataset available in the SPPQ Dataverse.
+
+### File structure
+- `data/`: Contains the data used in the paper.
+- `data/positions.parquet`: The positions recorded in testimony and lobbying records.
+- `data/bills.parquet`: The bills on which positions were recorded, merged with data from LegiScan and the National Conference of State Legislatures for the states in CHORUS.
+- `data/clients.parquet`: The organizations that recorded positions on bills in CHORUS.
+- `data/block_assignments.parquet`: The block assignments for each organization in each state, from our hierarchical bayesian stochastic block model.
+- `data/{IL, TX, MA, CO}_network_figure_clusters_named.xlsx`: Data used to create the network figures in the paper, with the clusters named by the authors.
+- `data/hbsbm/`: This folder contains `pickle` (`".pkl"`) files for each `BlockModel` object generated using the data corresponding to a unique `{state, record_type}` combination from `positions.parquet` (for example, one file contains the blockmodel for the `testimony` records in `Arizona`). They are saved using the following naming convention: `{state}_{record_type}_corrected_categorical_blockstate.pkl`. The `corrected` in the filename indicates that the blockmodel incorporated degree correction, and the `categorical` indicates that the blockmodel used categorical edge covariates as opposed to the `layered` model.
 
 ## Code
 The python code used to generate the data and figures presented in the paper is available in the `code` folder. Code used to create the CHORUS dataset is available for review upon reasonable request.

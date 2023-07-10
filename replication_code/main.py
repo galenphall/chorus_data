@@ -63,16 +63,23 @@ def main():
     """Load Wisconsin data"""
     wi_blockstate = blockstates[('WI', 'lobbying')]
     wi_positions = positions[positions.state == 'WI']
-    wi_block_levels = block_assignments[(block_assignments.state == 'WI') & (block_assignments.record_type == 'lobbying')]
-    wi_block_levels = wi_block_levels.set_index('entity_id').drop(columns=['state', 'record_type'])
-    wi_block_levels = wi_block_levels.applymap(lambda l: f"wi{l}")
+
+    wi_graph = wi_blockstate.g
+    wi_block_levels = pd.DataFrame({
+        l: dict(zip(wi_graph.vp.name, wi_blockstate.project_partition(l, 0)))
+        for l in range(len(wi_blockstate.levels))
+    }).applymap(lambda l: f"wi{l}")
+    wi_block_levels
 
     wi_clients = clients[clients.state == 'WI'].copy()
     wi_bills = bills[bills.state == 'WI'].copy()
 
     for level in range(0, len(wi_blockstate.levels)):
-        wi_bills[f'block_level_{level}'] = wi_bills[BILL_ID_COL].map(wi_block_levels[level].to_dict())
-        wi_clients[f'block_level_{level}'] = wi_clients[CLIENT_ID_COL].map(wi_block_levels[level].to_dict())
+        wi_bills[f'block_level_{level}'] = wi_bills[BILL_ID_COL].map(wi_block_levels[level])
+        wi_clients[f'block_level_{level}'] = wi_clients[CLIENT_ID_COL].map(wi_block_levels[level])
+
+    wi_clients = clients[clients.state == 'WI'].copy()
+    wi_bills = bills[bills.state == 'WI'].copy()
 
     ### Tables ###
 
@@ -314,7 +321,7 @@ def main():
         adj_matrix = get_bipartite_adjacency_matrix(graph_positions, (5, 3))
         block_names = region_clients.set_index(CLIENT_ID_COL)[label_column].astype(str).to_dict()
 
-        if not os.path.exists(f'tables/{region.upper()}_network_figure_clusters_named.xlsx'):
+        if not os.path.exists(f'data/{region.upper()}_network_figure_clusters_named.xlsx'):
 
             n_clients = abs(adj_matrix).groupby(block_names).apply(len)
             block_names = {k: v for k, v in block_names.items() if
@@ -326,7 +333,7 @@ def main():
 
         else:
 
-            block_names = pd.read_excel(f'tables/{region.upper()}_network_figure_clusters_named.xlsx').set_index(
+            block_names = pd.read_excel(f'data/{region.upper()}_network_figure_clusters_named.xlsx').set_index(
                 CLIENT_ID_COL).coalition_name.to_dict()
 
         adj_matrices.append(adj_matrix)
