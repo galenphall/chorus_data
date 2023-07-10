@@ -49,8 +49,9 @@ def main():
             blocks_df = pd.DataFrame(blocks)
             blocks_df['state'] = state
             blocks_df['record_type'] = record_type
-            blocks_df.index.name = 'id'
-            blocks_df = blocks_df.reset_index()
+            blocks_df.index.name = 'entity_id'
+            blocks_df = blocks_df.reset_index(drop=False)
+            blocks_df['entity_id'] = blocks_df.state + '_' + blocks_df['entity_id'].astype(str)
             block_assignments = pd.concat([block_assignments, blocks_df])
         block_assignments.to_csv('data/block_assignments.csv', index=False)
     else:
