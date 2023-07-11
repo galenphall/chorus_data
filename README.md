@@ -23,13 +23,13 @@ _Note that we will maintain updated versions of this dataset at a different loca
 ## Code
 The python code used to generate the data and figures presented in the paper is available in the `code` folder. Code used to create the CHORUS dataset is available for review upon reasonable request.
 
-Files:
-- `download.py`: Downloads the data from the SPPQ Dataverse.
-- `load.py`: Loads the data into memory as pandas dataframes.
-- `figures.py`: Functions to generate the figures presented in the paper.
-- `utils.py`: Utility functions for data analysis and plotting.
-- `hbsbm.py` : Functions to create the hierarchical bayesian stochastic block models. When recreating results from scratch using `run_all_blockmodels_from_scratch()`, note that since the blockmodels are stochastic, the results will not be identical to those presented in the paper.
-- `main.py`: Main file to run the code.
+### File structure
+- `code/download.py`: Functions to download the data from the SPPQ Dataverse or from Google Drive.
+- `code/load.py`: Functions to load the data into memory as pandas dataframes.
+- `code/figures.py`: Functions to generate the figures presented in the paper.
+- `code/utils.py`: Utility functions for data analysis and plotting.
+- `code/hbsbm.py` : Functions to create the hierarchical bayesian stochastic block models. When recreating results from scratch using `run_all_blockmodels_from_scratch()`, note that since the blockmodels are stochastic, the results will not be identical to those presented in the paper.
+- `code/main.py`: Main file to run the code, via `main.main()`.
 
 ## Figures
 The figures presented in the paper are available in the `figures` folder. The code used to generate them is available in the `code/figures.py` file. Note that the figures in the paper have been edited for clarity and aesthetics.
@@ -40,6 +40,9 @@ The code was written in Python 3.10 Most required packages are listed in `requir
 pip install -r requirements.txt.
 ```
 The hbsbm code also requires the `graph-tool` package, which can be installed via Conda but is not available on PyPI. To install it, follow the instructions [on the graph-tool website](https://git.skewed.de/count0/graph-tool/-/wikis/installation-instructions).
+
+## Runtime
+We ran the code on a premium Google Colab instance with 51 GB of RAM and a Python 3 Google Compute Engine backend. The code took approximately 15 minutes to run. Note that the maximum RAM actually used was about 13GB, so the code should run on a machine with 16GB of RAM.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
