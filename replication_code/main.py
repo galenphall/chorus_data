@@ -339,6 +339,7 @@ def main():
             block_names = pd.read_excel(f'data/{region.upper()}_network_figure_clusters_named.xlsx').set_index(
                 CLIENT_ID_COL).coalition_name.to_dict()
 
+        adj_matrix = adj_matrix.reindex(index = block_names)
         adj_matrices.append(adj_matrix)
         block_names_list.append(block_names)
 
