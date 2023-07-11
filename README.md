@@ -1,4 +1,4 @@
-![](CHORUS logo.png)
+![CHORUS logo](CHORUS logo.png)
 
 # Replication Materials
 This repository contains the code and data used in the paper "CHORUS: A new dataset of state interest group policy positions in the United States," forthcoming in _State Politics & Policy Quarterly_.

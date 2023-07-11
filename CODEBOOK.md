@@ -1,9 +1,3 @@
----
-css: 'img: {max-width: 100%}'
-pdf_options:
-    format: A4
-    margin: 1in
----
 <div style="text-align: center;">
 <p>CHORUS: A new dataset of state interest group policy positions in the United States</p>
 
