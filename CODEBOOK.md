@@ -1,4 +1,9 @@
-
+---
+css: 'img: {max-width: 100%}'
+pdf_options:
+    format: A4
+    margin: 1in
+---
 <div style="text-align: center;">
 <p>CHORUS: A new dataset of state interest group policy positions in the United States</p>
 
@@ -181,21 +186,21 @@ Columns: [`legiscan_bill_id`](#Billslegiscan_bill_id), [`legiscan_bill`](#Billsl
 
 ### <a name="Billsncsl_topics" id="ncsl_topics"></a>`ncsl_topics`
 
-| **Example**                                                                                                                                                                             | **Description**                                                        | **Type**   | **Source**    |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------|:-----------|:--------------|
-| ncsl_database__state_elections_legislation_database__ncsl_topic__candidates_qualifications_for_office; ncsl_database__state_elections_legislation_database__ncsl_topic__election_crimes | Topics that the bill addresses, based on matches with NCSL's databases | string     | Statenet/NCSL |
+| **Example**                                           | **Description**                                                        | **Type**   | **Source**    |
+|:------------------------------------------------------|:-----------------------------------------------------------------------|:-----------|:--------------|
+| candidates_qualifications_for_office; election_crimes | Topics that the bill addresses, based on matches with NCSL's databases | string     | Statenet/NCSL |
 
 ### <a name="Billsncsl_databases" id="ncsl_databases"></a>`ncsl_databases`
 
-| **Example**                                         | **Description**                      | **Type**   | **Source**    |
-|:----------------------------------------------------|:-------------------------------------|:-----------|:--------------|
-| ncsl_database__state_elections_legislation_database | NCSL databases that include the bill | string     | Statenet/NCSL |
+| **Example**                          | **Description**                      | **Type**   | **Source**    |
+|:-------------------------------------|:-------------------------------------|:-----------|:--------------|
+| state_elections_legislation_database | NCSL databases that include the bill | string     | Statenet/NCSL |
 
 ### <a name="Billsncsl_metatopics" id="ncsl_metatopics"></a>`ncsl_metatopics`
 
-| **Example**                             | **Description**                        | **Type**   | **Source**    |
-|:----------------------------------------|:---------------------------------------|:-----------|:--------------|
-| ncsl_metatopic__elections_and_campaigns | NCSL metatopics which contain the bill | string     | Statenet/NCSL |
+| **Example**             | **Description**                        | **Type**   | **Source**    |
+|:------------------------|:---------------------------------------|:-----------|:--------------|
+| elections_and_campaigns | NCSL metatopics which contain the bill | string     | Statenet/NCSL |
 
 ### <a name="Billsstate_unified_bill_id" id="state_unified_bill_id"></a>`state_unified_bill_id`
 
@@ -261,7 +266,7 @@ Columns: [`client_name`](#Clientsclient_name), [`state`](#Clientsstate), [`sourc
 
 ## Positions
 
-Columns: [`client_name`](#Positionsclient_name), [`lobbyist_rep_name`](#Positionslobbyist_rep_name), [`lobbyist_firm_name`](#Positionslobbyist_firm_name), [`position`](#Positionsposition), [`start_date`](#Positionsstart_date), [`end_date`](#Positionsend_date), [`year`](#Positionsyear), [`record_type`](#Positionsrecord_type), [`session`](#Positionssession), [`description`](#Positionsdescription), [`committee`](#Positionscommittee), [`state`](#Positionsstate), [`position_numeric`](#Positionsposition_numeric), [`docket_number`](#Positionsdocket_number), [`docket_prefix`](#Positionsdocket_prefix), [`legiscan_bill_id`](#Positionslegiscan_bill_id), [`state_unified_bill_id`](#Positionsstate_unified_bill_id), [`state_client_id`](#Positionsstate_client_id), [`ncsl_metatopics`](#Positionsncsl_metatopics), [`ncsl_topics`](#Positionsncsl_topics)
+Columns: [`client_name`](#Positionsclient_name), [`lobbyist_rep_name`](#Positionslobbyist_rep_name), [`lobbyist_firm_name`](#Positionslobbyist_firm_name), [`position`](#Positionsposition), [`start_date`](#Positionsstart_date), [`end_date`](#Positionsend_date), [`year`](#Positionsyear), [`record_type`](#Positionsrecord_type), [`session`](#Positionssession), [`description`](#Positionsdescription), [`committee`](#Positionscommittee), [`state`](#Positionsstate), [`position_numeric`](#Positionsposition_numeric), [`docket_number`](#Positionsdocket_number), [`docket_prefix`](#Positionsdocket_prefix), [`legiscan_bill_id`](#Positionslegiscan_bill_id), [`state_unified_bill_id`](#Positionsstate_unified_bill_id), [`state_client_id`](#Positionsstate_client_id)
 
 ### <a name="Positionsclient_name" id="client_name"></a>`client_name`
 
@@ -376,22 +381,6 @@ Columns: [`client_name`](#Positionsclient_name), [`lobbyist_rep_name`](#Position
 | **Example**   | **Description**                  | **Type**   | **Source**   |
 |:--------------|:---------------------------------|:-----------|:-------------|
 | MA_548        | The id used to identify clients. | string     | CHORUS       |
-
-### <a name="Positionsncsl_metatopics" id="ncsl_metatopics"></a>`ncsl_metatopics`
-
-| **Example**            | **Description**                                | **Type**   | **Source**    |
-|:-----------------------|:-----------------------------------------------|:-----------|:--------------|
-| ncsl_metatopic__energy | Metatopics for this bill in the NCSL databases | string     | StateNet/NCSL |
-
-**Additional information:** If plural, appears as comma-delimited values
-
-### <a name="Positionsncsl_topics" id="ncsl_topics"></a>`ncsl_topics`
-
-| **Example**                                                                                                                                                                | **Description**                            | **Type**   | **Source**    |
-|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------|:-----------|:--------------|
-| ncsl_database__energy_legislation_tracking_database__ncsl_topic__renewable_energy; ncsl_database__energy_legislation_tracking_database__ncsl_topic__renewable_energy_solar | Topics for this bill in the NCSL databases | string     | StateNet/NCSL |
-
-**Additional information:** If plural, appears as comma-delimited values
 
 
 

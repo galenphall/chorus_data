@@ -1,4 +1,4 @@
-![](info/CHORUS logo.png)
+![](CHORUS logo.png)
 
 # Replication Materials
 This repository contains the code and data used in the paper "CHORUS: A new dataset of state interest group policy positions in the United States," forthcoming in _State Politics & Policy Quarterly_.
@@ -42,7 +42,7 @@ pip install -r requirements.txt.
 The hbsbm code also requires the `graph-tool` package, which can be installed via Conda but is not available on PyPI. To install it, follow the instructions [on the graph-tool website](https://git.skewed.de/count0/graph-tool/-/wikis/installation-instructions).
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](info/LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Contact
 For questions or comments, please contact Galen Hall at

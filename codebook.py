@@ -1,10 +1,10 @@
 import pandas as pd
 
 files = [
-    'info/bills_codebook.xlsx',
-    'info/clients_codebook.xlsx',
-    'info/positions_codebook.xlsx',
-    'info/block_assignments_codebook.xlsx',
+    'codebook/bills_codebook.xlsx',
+    'codebook/clients_codebook.xlsx',
+    'codebook/positions_codebook.xlsx',
+    'codebook/block_assignments_codebook.xlsx',
 ]
 
 markdown_str = """
@@ -100,5 +100,5 @@ OpenSecrets. “OpenSecrets.” (https://www.opensecrets.org/). Data from OpenSe
 </p>
 """
 
-with open('info/codebook_output.md', 'w') as f:
+with open('codebook/codebook_output.md', 'w') as f:
     f.write(markdown_str)
