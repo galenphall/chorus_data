@@ -1,4 +1,5 @@
-# This is run from the outer directory, not the replication_code directory, so we need to add the replication_code directory to the path.
+# This is run from the outer directory, not the replication_code directory, so we need to add the replication_code
+# directory to the path.
 import pathlib
 import sys
 
@@ -247,11 +248,8 @@ def main():
     known_nmi = {}
     guessed_nmi = {}
     for l in range(len(wi_blockstate.levels)):
-        known_nmi[l] = normalized_mutual_info_score(
-            known_ftm_sample.ftm_industry,
-            known_ftm_sample[f'block_level_{l}'])
-        guessed_nmi[l] = normalized_mutual_info_score(guessed_sample.ftm_industry,
-                                                      guessed_sample[f'block_level_{l}'])
+        known_nmi[l] = normalized_mutual_info_score(known_ftm_sample.ftm_industry, known_ftm_sample[f'block_level_{l}'])
+        guessed_nmi[l] = normalized_mutual_info_score(guessed_sample.ftm_industry, guessed_sample[f'block_level_{l}'])
 
     fig, ax = figure_5_nmi_a(known_nmi, known_ftm_sample, guessed_nmi, guessed_sample)
     fig.savefig('figures/figure_5a_industry_nmi.pdf', bbox_inches='tight')
@@ -332,7 +330,7 @@ def main():
             adj_matrix = adj_matrix.reindex(block_names)
             region_clients[region_clients[CLIENT_ID_COL].isin(block_names)][
                 ['client_name', CLIENT_ID_COL, label_column]
-            ].drop_duplicates(CLIENT_ID_COL).to_excel(f'tables/{region.upper()}_network_figure_clusters.xlsx')
+            ].drop_duplicates(CLIENT_ID_COL).to_excel(f'data/{region.upper()}_network_figure_clusters.xlsx')
 
         else:
 
