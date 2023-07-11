@@ -248,7 +248,7 @@ def main():
     guessed_nmi = {}
     for l in range(len(wi_blockstate.levels)):
         known_nmi[l] = normalized_mutual_info_score(
-            known_ftm_sample.ftm_industry.apply(lambda x: x[0] if len(x) > 0 else None),
+            known_ftm_sample.ftm_industry,
             known_ftm_sample[f'block_level_{l}'])
         guessed_nmi[l] = normalized_mutual_info_score(guessed_sample.ftm_industry,
                                                       guessed_sample[f'block_level_{l}'])
