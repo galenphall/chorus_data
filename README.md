@@ -1,19 +1,10 @@
-![](CHORUS logo.png)
+![](info/CHORUS logo.png)
+
 # Replication Materials
-
-Galen Hall, Joshua Basseches, Rebecca Bromley-Trujillo, and Trevor Culhane, "CHORUS: A new dataset of state interest group policy positions in the United States", _State Politics & Policy Quarterly_ (forthcoming 2023).
-
+This repository contains the code and data used in the paper "CHORUS: A new dataset of state interest group policy positions in the United States," forthcoming in _State Politics & Policy Quarterly_.
 If you use our code and/or data, please cite the paper as:
 
-```
-@article{hall2023chorus,
-  title={CHORUS: A new dataset of state interest group policy positions in the United States},
-  author={Hall, Galen and Basseches, Joshua and Bromley-Trujillo, Rebecca and Culhane, Trevor},
-  journal={State Politics \& Policy Quarterly},
-  year={2023},
-  publisher={SAGE Publications Sage CA: Los Angeles, CA}
-}
-```
+> Hall, Galen, Joshua Basseches, Rebecca Bromley-Trujillo, and Trevor Culhane. 2023. "CHORUS: A new dataset of state interest group policy positions in the United States." _State Politics & Policy Quarterly_. Forthcoming 2023.
 
 ## Data
 The dataset used in the related paper is available online in the SPPQ Dataverse: https://dataverse.unc.edu/dataverse/sppq. To download it locally, run the `code/download.py` file.
@@ -27,7 +18,7 @@ _Note that we will maintain updated versions of this dataset at a different loca
 - `data/clients.parquet`: The organizations that recorded positions on bills in CHORUS.
 - `data/block_assignments.parquet`: The block assignments for each organization in each state, from our hierarchical bayesian stochastic block model.
 - `data/{IL, TX, MA, CO}_network_figure_clusters_named.xlsx`: Data used to create the network figures in the paper, with the clusters named by the authors.
-- `data/hbsbm/`: This folder contains `pickle` (`".pkl"`) files for each `BlockModel` object generated using the data corresponding to a unique `{state, record_type}` combination from `positions.parquet` (for example, one file contains the blockmodel for the `testimony` records in `Arizona`). They are saved using the following naming convention: `{state}_{record_type}_corrected_categorical_blockstate.pkl`. The `corrected` in the filename indicates that the blockmodel incorporated degree correction, and the `categorical` indicates that the blockmodel used categorical edge covariates as opposed to the `layered` model.
+- `data/hbsbm/{state}_{record_type}_corrected_categorical_blockstate.pkl`: This folder contains `pickle` (`".pkl"`) files for each `BlockModel` object generated using the data corresponding to a unique `{state, record_type}` combination from `positions.parquet` (for example, one file contains the blockmodel for the `testimony` records in `Arizona`). The `corrected` in the filename indicates that the blockmodel incorporated degree correction, and the `categorical` indicates that the blockmodel used categorical edge covariates as opposed to the `layered` model.
 
 ## Code
 The python code used to generate the data and figures presented in the paper is available in the `code` folder. Code used to create the CHORUS dataset is available for review upon reasonable request.
@@ -51,7 +42,7 @@ pip install -r requirements.txt.
 The hbsbm code also requires the `graph-tool` package, which can be installed via Conda but is not available on PyPI. To install it, follow the instructions [on the graph-tool website](https://git.skewed.de/count0/graph-tool/-/wikis/installation-instructions).
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](info/LICENSE.md) file for details.
 
 ## Contact
 For questions or comments, please contact Galen Hall at

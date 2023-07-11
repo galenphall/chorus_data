@@ -311,8 +311,7 @@ def main():
 
         adj_matrix = get_bipartite_adjacency_matrix(graph_positions, (5, 3))
 
-
-        if not os.path.exists(f'data/{region.upper()}_network_figure_clusters_named.xlsx'):
+        if not os.path.exists(f'data/{region.upper()}_network_figure_clusters_named.csv'):
 
             region_clients = clients[clients.state == region.upper()].copy()
             region_bills = bills[bills.state == region.upper()].copy()
@@ -330,11 +329,11 @@ def main():
             adj_matrix = adj_matrix.reindex(block_names)
             region_clients[region_clients[CLIENT_ID_COL].isin(block_names)][
                 ['client_name', CLIENT_ID_COL, label_column]
-            ].drop_duplicates(CLIENT_ID_COL).to_excel(f'data/{region.upper()}_network_figure_clusters.xlsx')
+            ].drop_duplicates(CLIENT_ID_COL).to_csv(f'data/{region.upper()}_network_figure_clusters.csv', index=False)
 
         else:
 
-            block_names = pd.read_excel(f'data/{region.upper()}_network_figure_clusters_named.xlsx').set_index(
+            block_names = pd.read_csv(f'data/{region.upper()}_network_figure_clusters_named.csv').set_index(
                 CLIENT_ID_COL).coalition_name.to_dict()
 
         adj_matrix = adj_matrix.reindex(index = block_names)
