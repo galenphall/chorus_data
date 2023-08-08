@@ -9,8 +9,8 @@ import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import normalized_mutual_info_score
 from sklearn.naive_bayes import MultinomialNB
-import load
-from figures import *
+from ..code import load
+from ..code.figures import *
 from ..code.utils import CLIENT_ID_COL, BILL_ID_COL
 
 
