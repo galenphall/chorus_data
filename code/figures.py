@@ -67,7 +67,7 @@ def figure_3_blockmodel(wi_blockstate, filename="figure_3_blockmodel_spaghetti.p
     plot_bipartite(wi_blockstate, f"figures/{filename}", nedges=5000)
 
 
-def figure_4_blockmodel_projection(wi_positions, wi_block_levels, wi_clients, block_level=3):
+def figure_4_blockmodel_projection(wi_positions, wi_blocks, wi_clients, block_level=3):
     """
     Plot the blockmodel projection for Wisconsin at a given block level
     :param wi_positions:
@@ -78,9 +78,11 @@ def figure_4_blockmodel_projection(wi_positions, wi_block_levels, wi_clients, bl
     """
     label_column = f'block_level_{block_level}'
 
+    wi_blocks = wi_blocks.set_index('entity_id')
+
     graph_positions = wi_positions[
-        wi_positions[CLIENT_ID_COL].map(wi_block_levels[0]).notna() &
-        wi_positions[BILL_ID_COL].map(wi_block_levels[0]).notna()
+        wi_positions[CLIENT_ID_COL].map(wi_blocks['block_0']).notna() &
+        wi_positions[BILL_ID_COL].map(wi_blocks['block_0']).notna()
         ]
 
     c = wi_clients.set_index(CLIENT_ID_COL)[label_column].astype(str).to_dict()

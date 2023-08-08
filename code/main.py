@@ -66,18 +66,15 @@ def main():
     wi_positions = positions[positions.state == 'WI']
 
     wi_graph = wi_blockstate.g
-    wi_block_levels = pd.DataFrame({
-        l: dict(zip(wi_graph.vp.name, wi_blockstate.project_partition(l, 0)))
-        for l in range(len(wi_blockstate.levels))
-    }).applymap(lambda l: f"wi{l}")
-    wi_block_levels.index = 'WI_' + wi_block_levels.index.astype(str)
 
     wi_clients = clients[clients.state == 'WI'].copy()
     wi_bills = bills[bills.state == 'WI'].copy()
+    wi_blocks = block_assignments[(block_assignments.state == 'WI') & (block_assignments.record_type == 'lobbying')].copy()
 
     for level in range(0, len(wi_blockstate.levels)):
-        wi_bills[f'block_level_{level}'] = wi_bills[BILL_ID_COL].map(wi_block_levels[level])
-        wi_clients[f'block_level_{level}'] = wi_clients[CLIENT_ID_COL].map(wi_block_levels[level])
+        level_map = wi_blocks.set_index('entity_id')[f'block_{level}']
+        wi_bills[f'block_level_{level}'] = wi_bills[BILL_ID_COL].map(level_map)
+        wi_clients[f'block_level_{level}'] = wi_clients[CLIENT_ID_COL].map(level_map)
 
     ### Tables ###
 
@@ -227,7 +224,7 @@ def main():
     # this does not return a matplotlib figure, but rather saves a file
 
     """Figure 4: interest group-level projection of the Wisconsin blockmodel"""
-    fig = figure_4_blockmodel_projection(wi_positions, wi_block_levels, wi_clients, block_level=3)
+    fig = figure_4_blockmodel_projection(wi_positions, wi_blocks, wi_clients, block_level=3)
     fig.savefig('figures/figure_4_blockmodel_projection.png', bbox_inches='tight', dpi=300)
     fig.savefig('figures/figure_4_blockmodel_projection.pdf', bbox_inches='tight')
 
