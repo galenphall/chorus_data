@@ -32,7 +32,7 @@ def main():
     if not (currpath / 'data').exists():
         (currpath / 'data').mkdir()
 
-    from hbsbm import get_bipartite_adjacency_matrix
+    from ..code.hbsbm import get_bipartite_adjacency_matrix
 
     """Load all position, bill, client data"""
     positions, clients, bills = load.positions(), load.clients(), load.bills()
