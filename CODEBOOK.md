@@ -260,7 +260,7 @@ Columns: [`client_name`](#Clientsclient_name), [`state`](#Clientsstate), [`sourc
 
 ## Positions
 
-Columns: [`client_name`](#Positionsclient_name), [`lobbyist_rep_name`](#Positionslobbyist_rep_name), [`lobbyist_firm_name`](#Positionslobbyist_firm_name), [`position`](#Positionsposition), [`start_date`](#Positionsstart_date), [`end_date`](#Positionsend_date), [`year`](#Positionsyear), [`record_type`](#Positionsrecord_type), [`session`](#Positionssession), [`description`](#Positionsdescription), [`committee`](#Positionscommittee), [`state`](#Positionsstate), [`position_numeric`](#Positionsposition_numeric), [`docket_number`](#Positionsdocket_number), [`docket_prefix`](#Positionsdocket_prefix), [`legiscan_bill_id`](#Positionslegiscan_bill_id), [`state_unified_bill_id`](#Positionsstate_unified_bill_id), [`state_client_id`](#Positionsstate_client_id)
+Columns: [`client_name`](#Positionsclient_name), [`lobbyist_rep_name`](#Positionslobbyist_rep_name), [`lobbyist_firm_name`](#Positionslobbyist_firm_name), [`position`](#Positionsposition), [`start_date`](#Positionsstart_date), [`end_date`](#Positionsend_date), [`year`](#Positionsyear), [`record_type`](#Positionsrecord_type), [`session`](#Positionssession), [`committee`](#Positionscommittee), [`state`](#Positionsstate), [`position_numeric`](#Positionsposition_numeric), [`docket_number`](#Positionsdocket_number), [`docket_prefix`](#Positionsdocket_prefix), [`legiscan_bill_id`](#Positionslegiscan_bill_id), [`state_unified_bill_id`](#Positionsstate_unified_bill_id), [`state_client_id`](#Positionsstate_client_id), [`ncsl_metatopics`](#Positionsncsl_metatopics), [`ncsl_topics`](#Positionsncsl_topics), [`bill_version`](#Positionsbill_version)
 
 ### <a name="Positionsclient_name" id="client_name"></a>`client_name`
 
@@ -375,6 +375,8 @@ Columns: [`client_name`](#Positionsclient_name), [`lobbyist_rep_name`](#Position
 | **Example**   | **Description**                  | **Type**   | **Source**   |
 |:--------------|:---------------------------------|:-----------|:-------------|
 | MA_548        | The id used to identify clients. | string     | CHORUS       |
+
+### <a name="Positionsncsl_metatopics
 
 
 

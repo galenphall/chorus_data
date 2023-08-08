@@ -6,6 +6,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
+CLIENT_ID_COL = 'state_client_id'
+BILL_ID_COL = 'state_unified_bill_id'
+
 def plot_bipartite(blockstate, filename=None, nedges=1000, hide_h=0, h_v_size=5.0, h_e_size=1.0, **kwargs):
     """
     Plot the graph and group structure.
@@ -459,3 +462,4 @@ class PositionGraph(nx.Graph):
                         G.add_edge(u, v, weight=agfunc(u, v))
 
             return G
+

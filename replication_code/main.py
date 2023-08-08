@@ -11,7 +11,7 @@ from sklearn.metrics import normalized_mutual_info_score
 from sklearn.naive_bayes import MultinomialNB
 import load
 from figures import *
-from config import CLIENT_ID_COL, BILL_ID_COL
+from replication_code.utils import CLIENT_ID_COL, BILL_ID_COL
 
 
 def main():
