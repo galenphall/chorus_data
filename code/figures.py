@@ -64,7 +64,7 @@ def figure_3_blockmodel(wi_blockstate, filename="figure_3_blockmodel_spaghetti.p
     :return:
     """
     # imported here because this requires graph-tool
-    from utils import plot_bipartite
+    from ..code.utils import plot_bipartite
     plot_bipartite(wi_blockstate, f"figures/{filename}", nedges=5000)
 
 
