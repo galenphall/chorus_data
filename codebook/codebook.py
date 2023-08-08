@@ -33,7 +33,7 @@ trevor_culhane@brown.edu <br>
 # Codebook
 
 ## Data
-The data used in this project is available online in the SPPQ Dataverse: https://dataverse.unc.edu/dataverse/sppq. To download it locally, run the `code/download.py` file.
+The data used in this project is available online in the SPPQ Dataverse: https://dataverse.unc.edu/dataverse/sppq. To download it locally, run the ```code/download.py``` file.
 
 
 """
@@ -51,13 +51,13 @@ for file in files:
     df = df.rename(columns={description_col: 'Description'})
 
     # link to the corresponding section below for each variable
-    varlinks = [f"[`{variable}`](#{name}{variable})" for variable in df.Variable.values]
+    varlinks = [f"[```{variable}```](#{name}{variable})" for variable in df.Variable.values]
 
     markdown_str += f"Columns: {', '.join(varlinks)}\n\n"
 
     for idx, row in df.iterrows():
         ## add a header for the variable, and make it an anchor
-        markdown_str += f'### <a name="{name}{row.Variable}" id="{row.Variable}"></a>`{row.Variable}`\n\n'
+        markdown_str += f'### <a name="{name}{row.Variable}" id="{row.Variable}"></a>```{row.Variable}```\n\n'
 
         addl = next(c for c in row.index if "Additional" in c)
 
