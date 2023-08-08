@@ -2,8 +2,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from ..code.utils import CLIENT_ID_COL, BILL_ID_COL
-from utils import cluster_agreement_plot
+from ..code.utils import CLIENT_ID_COL, BILL_ID_COL, cluster_agreement_plot
 
 
 def figure_1_records_per_year(records_per_year):
