@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from ..code.utils import CLIENT_ID_COL, BILL_ID_COL, cluster_agreement_plot
+from ..code.utils import CLIENT_ID_COL, BILL_ID_COL, cluster_agreement_plot, plot_bipartite
 
 
 def figure_1_records_per_year(records_per_year):
@@ -64,7 +64,6 @@ def figure_3_blockmodel(wi_blockstate, filename="figure_3_blockmodel_spaghetti.p
     :return:
     """
     # imported here because this requires graph-tool
-    from ..code.utils import plot_bipartite
     plot_bipartite(wi_blockstate, f"figures/{filename}", nedges=5000)
 
 
