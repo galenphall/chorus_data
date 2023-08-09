@@ -4,7 +4,10 @@
 This repository contains the code and data used in the paper "CHORUS: A new dataset of state interest group policy positions in the United States," forthcoming in _State Politics & Policy Quarterly_.
 If you use our code and/or data, please cite the paper as:
 
-> Hall, Galen, Joshua Basseches, Rebecca Bromley-Trujillo, and Trevor Culhane. 2023. "CHORUS: A new dataset of state interest group policy positions in the United States." _State Politics & Policy Quarterly_. Forthcoming 2023.
+
+<p style="padding-left: 2em; text-indent: -2em;">
+Hall, Galen, Joshua Basseches, Rebecca Bromley-Trujillo, and Trevor Culhane. 2023. "CHORUS: A new dataset of state interest group policy positions in the United States." <em>State Politics & Policy Quarterly</em>. Forthcoming 2023.
+</p>
 
 ## Data
 The dataset used in the related paper is available online in the SPPQ Dataverse: https://dataverse.unc.edu/dataverse/sppq. To download it locally, run the ```code/download.py``` file.
@@ -53,7 +56,7 @@ The python code used to generate the data and figures presented in the paper is 
 - ```code/main.py```: Main file to run the code, via ```main.main()```.
 
 ## Figures
-The figures presented in the paper are available in the ```figures``` folder. The code used to generate them is available in the ```code/figures.py``` file. Note that the figures in the paper have been edited for clarity and aesthetics.
+The figures presented in the paper will be saved in the ```figures``` folder by ```main.main()```. The code used to generate them individually is available in the ```code/figures.py``` file. Note that the figures in the paper have been edited for clarity and aesthetics and will not exactly match those rendered from the code.
 
 ## Other files
 - ```requirements.txt```: The required packages to run the code.
