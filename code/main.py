@@ -49,7 +49,8 @@ def main():
             )) for level in range(len(blockstate.levels))}
             blocks_df = pd.DataFrame(blocks)
             blocks_df.columns = 'block_' + blocks_df.columns.astype(str)
-            blocks_df = blocks_df.applymap(lambda x: f"{state}_{record_type}_{int(str(x))}")
+            for column in blocks_df.columns:
+                blocks_df[column] = blocks_df[column].astype(int)
             blocks_df['state'] = state
             blocks_df['record_type'] = record_type
             blocks_df.index.name = 'entity_id'
