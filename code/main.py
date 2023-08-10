@@ -48,6 +48,7 @@ def main():
                 blockstate.project_partition(level, 0)
             )) for level in range(len(blockstate.levels))}
             blocks_df = pd.DataFrame(blocks)
+            blocks_df.columns = 'block_' + blocks_df.columns.astype(str)
             blocks_df['state'] = state
             blocks_df['record_type'] = record_type
             blocks_df.index.name = 'entity_id'
@@ -224,7 +225,6 @@ def main():
     # this does not return a matplotlib figure, but rather saves a file
 
     """Figure 4: interest group-level projection of the Wisconsin blockmodel"""
-    # TODO: load these blocks directly from the blockmodel itself.
     fig = figure_4_blockmodel_projection(wi_positions, wi_blocks, wi_clients, block_level=3)
     fig.savefig('figures/figure_4_blockmodel_projection.png', bbox_inches='tight', dpi=300)
     fig.savefig('figures/figure_4_blockmodel_projection.pdf', bbox_inches='tight')
