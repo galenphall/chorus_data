@@ -149,7 +149,7 @@ def main():
     pct_passed = wi_bills.groupby(f'block_level_{level}').apply(
         lambda b: (b.status.isin([4, 5]).sum() / b.status.notna().sum()))
 
-    table_3 = pd.concat([n_bills, pct_passed, top_words], 1)
+    table_3 = pd.concat([n_bills, pct_passed, top_words], axis=1)
     table_3.columns = ['N', '% passed', 'top descriptors']
     table_3.to_excel('tables/wi_high_level_bill_categories.xlsx')
 
