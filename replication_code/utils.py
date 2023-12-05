@@ -27,7 +27,6 @@ def plot_bipartite(blockstate, filename=None, nedges=1000, hide_h=0, h_v_size=5.
                     subsample_edges=nedges, hshortcuts=1, hide=hide_h,
                     hvprops={'size': h_v_size},
                     heprops={'pen_width': h_e_size},
-                    edge_pen_width=0.5,
                     edge_color=g.ep.weight.copy("double"),
                     eorder=g.ep.weight,
                     ecmap=(cm, 0.6), edge_gradient=[],

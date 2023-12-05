@@ -9,9 +9,9 @@ import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import normalized_mutual_info_score
 from sklearn.naive_bayes import MultinomialNB
-import load
-from figures import *
-from config import CLIENT_ID_COL, BILL_ID_COL
+import replication_code.load as load
+from replication_code.figures import *
+from replication_code.config import CLIENT_ID_COL, BILL_ID_COL
 
 
 def main():
@@ -32,7 +32,7 @@ def main():
     if not (currpath / 'data').exists():
         (currpath / 'data').mkdir()
 
-    from hbsbm import get_bipartite_adjacency_matrix
+    from replication_code.hbsbm import get_bipartite_adjacency_matrix
 
     """Load all position, bill, client data"""
     positions, clients, bills = load.positions(), load.clients(), load.bills()
