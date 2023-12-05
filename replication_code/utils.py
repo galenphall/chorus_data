@@ -281,7 +281,7 @@ def cluster_agreement_plot(
                                    node_color=list(node_coalition_ranked),
                                    node_size=50,
                                    cmap='tab20',
-                                   vmin=1,
+                                   vmin=0,
                                    vmax=len(communities)
                                    )
     nodes.set_edgecolor('k')
