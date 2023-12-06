@@ -340,6 +340,8 @@ def main():
         adj_matrices.append(adj_matrix)
         block_names_list.append(block_names)
 
+    # Note that figure 6 required manual editing of the output of the above code in order to fit the figure shown in the
+    # paper. The code above produces the data used to generate the figure, but the figure itself was manually edited.
     fig = figure_6_energy_positions(adj_matrices, block_names_list, ['CO', 'TX', 'IL', 'MA'])
     fig.savefig('figures/figure_6_energy_positions.pdf', bbox_inches='tight')
     fig.savefig('figures/figure_6_energy_positions.png', bbox_inches='tight', dpi=300)
