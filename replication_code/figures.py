@@ -168,7 +168,7 @@ def figure_6_energy_positions(state_adj_matrices, state_block_names, states):
     :return:
     """
     fig, axes = plt.subplots(
-        2, 2, figsize=(20, 20),
+        2, 2, figsize=(30, 30),
         gridspec_kw={'wspace': 0.1, 'hspace': 0.1},
     )
 
