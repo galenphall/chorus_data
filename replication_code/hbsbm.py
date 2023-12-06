@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import tqdm
 
-from ..code.utils import CLIENT_ID_COL, BILL_ID_COL
+from ..replication_code.utils import CLIENT_ID_COL, BILL_ID_COL
 
 
 def get_bipartite_graph(bipartite_adj_matrix: pd.DataFrame):
