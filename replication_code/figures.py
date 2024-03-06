@@ -3,7 +3,11 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 from config import CLIENT_ID_COL, BILL_ID_COL
-from utils import cluster_agreement_plot
+import utils
+
+import importlib
+importlib.reload(utils)
+
 
 
 def figure_1_records_per_year(records_per_year):
@@ -168,14 +172,14 @@ def figure_6_energy_positions(state_adj_matrices, state_block_names, states):
     :return:
     """
     fig, axes = plt.subplots(
-        2, 2, figsize=(30, 30),
+        2, 2, figsize=(40, 40),
         gridspec_kw={'wspace': 0.1, 'hspace': 0.1},
     )
 
     for adj_matrix, block_names, state, ax in zip(
             state_adj_matrices, state_block_names, states, axes.flatten()
     ):
-        cluster_agreement_plot(adj_matrix, block_names, relation='both', ax=ax)
+        ax = utils.cluster_agreement_plot(adj_matrix, block_names, relation='both', ax=ax, edgescale=60)
         ax.set_title(state, fontsize=20, fontweight='bold')
         ax.spines['top'].set_visible(True)
 

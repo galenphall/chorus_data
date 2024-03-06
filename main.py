@@ -9,9 +9,14 @@ import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import normalized_mutual_info_score
 from sklearn.naive_bayes import MultinomialNB
-import replication_code.load as load
-from replication_code.figures import *
+from replication_code import load
+from replication_code import figures
+
 from replication_code.config import CLIENT_ID_COL, BILL_ID_COL
+
+
+
+import importlib
 
 
 def main():
@@ -206,7 +211,7 @@ def main():
         positions[CLIENT_ID_COL].notna() &
         (positions.year < 2022)].groupby(['record_type', 'year']).position_numeric.count().unstack().T
 
-    fig = figure_1_records_per_year(records_per_year)
+    fig = figures.figure_1_records_per_year(records_per_year)
     fig.savefig('figures/figure_1_histogram.png', bbox_inches='tight', dpi=300)
     fig.savefig('figures/figure_1_histogram.pdf', bbox_inches='tight')
 
@@ -218,16 +223,16 @@ def main():
     records_per_client_hist = records_per_client.apply(lambda c: 2 ** (round(np.log2(c)))).apply(
         lambda c: c.value_counts())
 
-    fig = figure_2_histogram(records_per_bill_hist, records_per_client_hist)
+    fig = figures.figure_2_histogram(records_per_bill_hist, records_per_client_hist)
     fig.savefig('figures/figure_2_histogram.png', bbox_inches='tight', dpi=300)
     fig.savefig('figures/figure_2_histogram.pdf', bbox_inches='tight')
 
     """Figure 3: Wisconsin blockmodel"""
-    figure_3_blockmodel(wi_blockstate)
+    figures.figure_3_blockmodel(wi_blockstate)
     # this does not return a matplotlib figure, but rather saves a file
 
     """Figure 4: interest group-level projection of the Wisconsin blockmodel"""
-    fig = figure_4_blockmodel_projection(wi_positions, wi_block_levels, wi_clients, block_level=3)
+    fig = figures.figure_4_blockmodel_projection(wi_positions, wi_block_levels, wi_clients, block_level=3)
     fig.savefig('figures/figure_4_blockmodel_projection.png', bbox_inches='tight', dpi=300)
     fig.savefig('figures/figure_4_blockmodel_projection.pdf', bbox_inches='tight')
 
@@ -251,7 +256,7 @@ def main():
         known_nmi[l] = normalized_mutual_info_score(known_ftm_sample.ftm_industry, known_ftm_sample[f'block_level_{l}'])
         guessed_nmi[l] = normalized_mutual_info_score(guessed_sample.ftm_industry, guessed_sample[f'block_level_{l}'])
 
-    fig, ax = figure_5_nmi_a(known_nmi, known_ftm_sample, guessed_nmi, guessed_sample)
+    fig, ax = figures.figure_5_nmi_a(known_nmi, known_ftm_sample, guessed_nmi, guessed_sample)
     fig.savefig('figures/figure_5a_industry_nmi.pdf', bbox_inches='tight')
     fig.savefig('figures/figure_5a_industry_nmi.png', bbox_inches='tight', dpi=300)
 
@@ -279,7 +284,7 @@ def main():
             wi_bills_sample.ncsl_metatopics.apply(lambda x: x.split(', ')[0]),
             wi_bills_sample[f'block_level_{l}'])
 
-    fig = figure_5_nmi_b(topic_nmi, wi_bills_with_topics, meta_topic_nmi, wi_bills_sample)
+    fig = figures.figure_5_nmi_b(topic_nmi, wi_bills_with_topics, meta_topic_nmi, wi_bills_sample)
     fig.savefig('figures/figure_5b_topic_nmi.pdf', bbox_inches='tight')
     fig.savefig('figures/figure_5b_topic_nmi.png', bbox_inches='tight', dpi=300)
 
@@ -334,14 +339,21 @@ def main():
         else:
 
             block_names = pd.read_csv(f'data/{region.upper()}_network_figure_clusters_named.csv').set_index(
-                CLIENT_ID_COL).coalition_name.to_dict()
+                CLIENT_ID_COL).coalition_name
+
+            # Keep only coalitions larger than 3 members
+            sizes = block_names.value_counts()
+            block_names = block_names[block_names.map(sizes) > 3]
+            block_names = block_names.to_dict()
 
         adj_matrix = adj_matrix.reindex(index = block_names)
         adj_matrices.append(adj_matrix)
         block_names_list.append(block_names)
 
+    importlib.reload(figures)
     # Note that figure 6 required manual editing of the output of the above code in order to fit the figure shown in the
     # paper. The code above produces the data used to generate the figure, but the figure itself was manually edited.
-    fig = figure_6_energy_positions(adj_matrices, block_names_list, ['CO', 'TX', 'IL', 'MA'])
+    fig = figures.figure_6_energy_positions(adj_matrices, block_names_list, ['CO', 'TX', 'IL', 'MA'])
+
     fig.savefig('figures/figure_6_energy_positions.pdf', bbox_inches='tight')
     fig.savefig('figures/figure_6_energy_positions.png', bbox_inches='tight', dpi=300)

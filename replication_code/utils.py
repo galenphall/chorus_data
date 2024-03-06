@@ -235,7 +235,7 @@ def cluster_agreement_plot(
 
     centers = {order[i]: centers[idxs[i]] for i in idxs}
 
-    scale = np.pi / (3 * len(communities))
+    scale = np.pi / (4 * len(communities))
 
     G_neg = pos_graph.agent_projection(-1, 'cossim')
     G_pos = pos_graph.agent_projection(1, 'cossim')
@@ -327,15 +327,6 @@ def cluster_agreement_plot(
     circles.set_zorder(100)
     nodes.set_zorder(105)
 
-    """Label the coalitions"""
-    for c in centers:
-        n = len(communities[c])
-        titletext = '\n'.join(textwrap.wrap(c, 20))
-        ax.text(*(centers[c] * 1.6), f"{titletext}\nN = {n}",
-                horizontalalignment='center',
-                verticalalignment='center',
-                fontdict={'size': 16})
-
     """Draw the pie charts"""
     ratios = {}
     for k in C:
@@ -356,6 +347,15 @@ def cluster_agreement_plot(
                     ratios[k],
                     zorder=99,
                     )
+
+    """Label the coalitions"""
+    for c in centers:
+        n = len(communities[c])
+        titletext = '\n'.join(textwrap.wrap(c, 14))
+        ax.text(*(centers[c] * 1.4), f"{titletext}\nN = {n}",
+                horizontalalignment='center',
+                verticalalignment='center',
+                fontdict={'size': 20}, zorder=-1)
 
     [ax.spines[s].set_visible(False) for s in ax.spines]
 
