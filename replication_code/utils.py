@@ -30,7 +30,6 @@ def plot_bipartite(blockstate, filename=None, nedges=1000, hide_h=0, h_v_size=5.
                     subsample_edges=nedges, hshortcuts=1, hide=hide_h,
                     hvprops={'size': h_v_size},
                     heprops={'pen_width': h_e_size},
-                    edge_pen_width=0.5,
                     edge_color=g.ep.weight.copy("double"),
                     eorder=g.ep.weight,
                     ecmap=(cm, 0.6), edge_gradient=[],
@@ -96,7 +95,7 @@ def plot_straight_edge_offset(lw, p1, p2, ax, color, direction):
     elif abs(dy) < abs(ax.get_ylim()[0] - ax.get_ylim()[1]):
         ax.fill_between(x1, y1, y1 + direction * dy, color=color, interpolate=False)
     else:
-        print("Error on edge %s\ndx=%.2f, dy=%.2f" % (str(e), dx, dy))
+        print("Error on edge %s\ndx=%.2f, dy=%.2f" % (str((p1, p2)), dx, dy))
 
 
 def plot_curved_edge(lw, p1, p2, s1, s2, ax, color, direction, arrowstyle='-'):
@@ -285,7 +284,7 @@ def cluster_agreement_plot(
                                    node_color=list(node_coalition_ranked),
                                    node_size=50,
                                    cmap='tab20',
-                                   vmin=1,
+                                   vmin=0,
                                    vmax=len(communities)
                                    )
     nodes.set_edgecolor('k')

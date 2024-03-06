@@ -9,9 +9,9 @@ import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import normalized_mutual_info_score
 from sklearn.naive_bayes import MultinomialNB
-from ..code import load
-from ..code.figures import *
-from ..code.utils import CLIENT_ID_COL, BILL_ID_COL
+import replication_code.load as load
+from replication_code.figures import *
+from replication_code.config import CLIENT_ID_COL, BILL_ID_COL
 
 
 def main():
@@ -32,7 +32,7 @@ def main():
     if not (currpath / 'data').exists():
         (currpath / 'data').mkdir()
 
-    from ..code.hbsbm import get_bipartite_adjacency_matrix
+    from replication_code.hbsbm import get_bipartite_adjacency_matrix
 
     """Load all position, bill, client data"""
     positions, clients, bills = load.positions(), load.clients(), load.bills()
@@ -149,7 +149,7 @@ def main():
     pct_passed = wi_bills.groupby(f'block_level_{level}').apply(
         lambda b: (b.status.isin([4, 5]).sum() / b.status.notna().sum()))
 
-    table_3 = pd.concat([n_bills, pct_passed, top_words], 1)
+    table_3 = pd.concat([n_bills, pct_passed, top_words], axis=1)
     table_3.columns = ['N', '% passed', 'top descriptors']
     table_3.to_excel('tables/wi_high_level_bill_categories.xlsx')
 
@@ -340,6 +340,8 @@ def main():
         adj_matrices.append(adj_matrix)
         block_names_list.append(block_names)
 
+    # Note that figure 6 required manual editing of the output of the above code in order to fit the figure shown in the
+    # paper. The code above produces the data used to generate the figure, but the figure itself was manually edited.
     fig = figure_6_energy_positions(adj_matrices, block_names_list, ['CO', 'TX', 'IL', 'MA'])
     fig.savefig('figures/figure_6_energy_positions.pdf', bbox_inches='tight')
     fig.savefig('figures/figure_6_energy_positions.png', bbox_inches='tight', dpi=300)

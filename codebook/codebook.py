@@ -33,7 +33,7 @@ trevor_culhane@brown.edu <br>
 # Codebook
 
 ## Data
-The data used in this project is available online in the SPPQ Dataverse: https://dataverse.unc.edu/dataverse/sppq. To download it locally, run the ```code/download.py``` file.
+The data used in this project is available online in the SPPQ Dataverse: https://dataverse.unc.edu/dataverse/sppq. To download it locally, run the ```replication_code/download.py``` file.
 
 
 """

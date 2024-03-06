@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from ..code.utils import CLIENT_ID_COL, BILL_ID_COL, cluster_agreement_plot, plot_bipartite
+from ..replication_code.utils import CLIENT_ID_COL, BILL_ID_COL, cluster_agreement_plot, plot_bipartite
 
 
 def figure_1_records_per_year(records_per_year):
@@ -168,7 +168,7 @@ def figure_6_energy_positions(state_adj_matrices, state_block_names, states):
     :return:
     """
     fig, axes = plt.subplots(
-        2, 2, figsize=(20, 20),
+        2, 2, figsize=(30, 30),
         gridspec_kw={'wspace': 0.1, 'hspace': 0.1},
     )
 
