@@ -12,13 +12,13 @@ def figure_1_records_per_year(records_per_year):
     :return:
     """
     fig, ax = plt.subplots(1, 1, figsize=(5, 3))
-    records_per_year.plot(
+    records_per_year[records_per_year.year <= 2021].plot(
         mec='k',
         marker='o',
         grid=True,
         ax=ax)
     current_values = plt.gca().get_yticks()
-    ax.set_xticks(np.arange(1997, 2023, 2))
+    ax.set_xticks(np.arange(1997, 2021, 2))
     ax.set_xticklabels(ax.get_xticks(), rotation=45, ha='right')
     ax.set_yticklabels(['{:,.0f}'.format(x) for x in current_values])
     ax.set_ylabel("Positions")
