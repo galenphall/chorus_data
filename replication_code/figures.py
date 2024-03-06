@@ -172,14 +172,14 @@ def figure_6_energy_positions(state_adj_matrices, state_block_names, states):
     :return:
     """
     fig, axes = plt.subplots(
-        2, 2, figsize=(40, 40),
+        2, 2, figsize=(20, 20),
         gridspec_kw={'wspace': 0.1, 'hspace': 0.1},
     )
 
     for adj_matrix, block_names, state, ax in zip(
             state_adj_matrices, state_block_names, states, axes.flatten()
     ):
-        ax = utils.cluster_agreement_plot(adj_matrix, block_names, relation='both', ax=ax, edgescale=60)
+        ax = utils.cluster_agreement_plot(adj_matrix, block_names, relation='both', ax=ax, edgescale=30)
         ax.set_title(state, fontsize=20, fontweight='bold')
         ax.spines['top'].set_visible(True)
 

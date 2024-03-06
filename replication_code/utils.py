@@ -355,7 +355,7 @@ def cluster_agreement_plot(
         ax.text(*(centers[c] * 1.4), f"{titletext}\nN = {n}",
                 horizontalalignment='center',
                 verticalalignment='center',
-                fontdict={'size': 20}, zorder=-1)
+                fontdict={'size': 14}, zorder=-1)
 
     [ax.spines[s].set_visible(False) for s in ax.spines]
 
